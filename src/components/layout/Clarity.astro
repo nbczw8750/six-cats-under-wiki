@@ -1,0 +1,35 @@
+---
+/**
+ * Microsoft Clarity — heatmaps + session recordings (optional integration).
+ *
+ * Same env gate as every other optional feature in this template (AdSense /
+ * giscus / GA / Cloudflare beacon): an EMPTY `PUBLIC_CLARITY_PROJECT_ID`
+ * renders nothing at all, so an unconfigured fork ships zero Clarity JS and
+ * keeps its Lighthouse score. Enable it by filling that variable in the
+ * Cloudflare dashboard (Settings → Variables and Secrets) and redeploying —
+ * never by pasting the vendor snippet a second time (double paste = every
+ * session counted twice, and the heatmap becomes unreadable).
+ *
+ * The snippet below is Clarity's "Manual install" script, verbatim, with the
+ * project ID passed in as the only variable.
+ */
+const projectId = import.meta.env.PUBLIC_CLARITY_PROJECT_ID as string | undefined;
+---
+{
+  projectId && (
+    <script is:inline define:vars={{ projectId }}>
+      (function (c, l, a, r, i, t, y) {
+        c[a] =
+          c[a] ||
+          function () {
+            (c[a].q = c[a].q || []).push(arguments);
+          };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = 'https://www.clarity.ms/tag/' + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+      })(window, document, 'clarity', 'script', projectId);
+    </script>
+  )
+}

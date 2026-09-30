@@ -16,6 +16,7 @@ import { defaultLocale, locales, OG_LOCALE_MAP, type Locale } from '~/i18n/routi
 import { organizationJsonLd } from '~/lib/seo';
 import JsonLd from '~/components/seo/JsonLd.astro';
 import CookieConsent from './CookieConsent.astro';
+import Clarity from './Clarity.astro';
 import { getUi } from '~/i18n/ui';
 
 interface Props {
@@ -286,6 +287,13 @@ const privacyLabel = consent?.privacyLabel ?? footerStrings.privacyPolicy ?? 'Pr
         data-cf-beacon={JSON.stringify({ token: cfBeaconToken })}
       ></script>
     )}
+
+    {/*
+      Microsoft Clarity (optional) — heatmaps + session recordings. Renders
+      nothing unless PUBLIC_CLARITY_PROJECT_ID is set (Clarity.astro), the
+      same env gate as every other optional integration above.
+    */}
+    <Clarity />
 
     {/* JSON-LD: Organization (global) + any page-specific */}
     <JsonLd data={orgJsonLd} />
