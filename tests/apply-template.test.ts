@@ -241,7 +241,12 @@ describe('rewriteWranglerVars is value-aware (a re-run must not wipe the user en
     expect(rewriteWranglerVars(makeInput(), demoOnce)).toBe(demoOnce);
   });
 
-  test('DEMO_VAR_VALUES covers every live value in the shipped wrangler.toml (drift guard)', () => {
+  // Forks may delete wrangler.toml entirely (docs/deployment.md option A: the
+  // Pages dashboard takes over env). An absent file ships no values, so the
+  // guard has nothing to check — skip rather than die on ENOENT.
+  test.skipIf(!existsSync(join(repoRoot, 'wrangler.toml')))(
+    'DEMO_VAR_VALUES covers every live value in the shipped wrangler.toml (drift guard)',
+    () => {
     // If the demo gains a new non-empty env value that is not registered as a
     // demo value, a re-run would PRESERVE it into every fork — the exact leak
     // this list exists to prevent. Every uncommented [vars] value must either

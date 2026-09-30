@@ -158,7 +158,7 @@ for (const loc of routingLocales) {
 if (displayErrors === 0) console.log('  ✅ all displayTypes valid');
 
 // --- Check 5: deployment domain gate (wrangler.toml ↔ site.ts) -------------
-console.log('\n4. Deployment domain (wrangler.toml SITE_URL ↔ site.ts domain)');
+console.log('\n4. Deployment domain (SITE_URL ↔ site.ts domain)');
 const siteSrc = read('src/config/site.ts');
 const domain = siteSrc.match(/^\s*domain:\s*'([^']+)'/m)?.[1];
 let effectiveUrl = process.env.SITE_URL ?? '';
@@ -169,9 +169,17 @@ if (!effectiveUrl && fs.existsSync(path.resolve(ROOT, 'wrangler.toml'))) {
 }
 if (!domain) {
   err('could not parse `domain` in src/config/site.ts');
-} else if (!effectiveUrl) {
-  err(`no SITE_URL found (env or wrangler.toml) — canonical/sitemap would fall back to https://${domain}`);
 } else {
+  if (!effectiveUrl) {
+    // No SITE_URL anywhere: astro.config.ts falls back to this same domain, so
+    // the build ships ITS OWN domain — not the demo's. Absence is reported,
+    // not fatal; only a MISMATCHED value can break canonical/sitemap, which is
+    // exactly what this gate exists to catch. Forks that deleted wrangler.toml
+    // (docs/deployment.md option A) land here.
+    effectiveUrl = `https://${domain}`;
+    urlSource = 'site.ts domain fallback';
+    console.log('  ⚠️ no SITE_URL (env or wrangler.toml) — build falls back to site.ts domain');
+  }
   try {
     const host = new URL(effectiveUrl).host;
     if (host !== domain) {

@@ -8,6 +8,7 @@ import * as path from 'node:path';
 
 import { locales, defaultLocale } from './src/i18n/routing';
 import { CONTENT_TYPES } from './src/config/navigation';
+import { site } from './src/config/site';
 import { fallbackDetailPaths } from './src/lib/fallback-paths';
 
 /**
@@ -194,7 +195,12 @@ function buildLastmodMap(
   return map;
 }
 
-const siteOrigin = process.env.SITE_URL || 'https://anvil.wiki';
+// SITE_URL is deploy-time truth (wrangler.toml [vars] or the Pages dashboard).
+// A fork that deleted wrangler.toml (docs/deployment.md option A) can have no
+// SITE_URL at all on a local/CI machine — fall back to the CONFIG layer's own
+// domain instead of the demo site's, so such a build can never emit another
+// site's canonical/og:url/sitemap URLs. See scripts/check-config.ts (same rule).
+const siteOrigin = process.env.SITE_URL || `https://${site.domain}`;
 
 // trailingSlash:'always' makes every generated URL end with "/", but the
 // lookup tables above (lastmodMap / noindexPaths / coverage keys) are built
@@ -277,7 +283,7 @@ function alternatesFor(pagePath: string): Array<{ lang: string; url: string }> |
 
 // https://astro.build/config
 export default defineConfig({
-  site: process.env.SITE_URL || 'https://anvil.wiki',
+  site: siteOrigin,
   output: 'static',
   // Astro 7 flipped the default from true to 'jsx', which strips whitespace
   // between adjacent inline elements ("word" + "word" can render joined).
