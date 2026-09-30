@@ -1,21 +1,3 @@
-# ⚠️⚠️⚠️ FORKERS READ THIS FIRST ⚠️⚠️⚠️
-#
-# This wrangler.toml contains the DEMO SITE config (anvil.wiki).
-# The [vars] below point at PNGTRID/AnvilWiki's own GitHub Discussions.
-#
-# When you fork: EITHER
-#   (A) Edit the [vars] values below to your own (SITE_URL + GISCUS_*), OR
-#   (B) Delete this file (`git rm wrangler.toml && git commit`) and configure
-#       env vars in the Cloudflare dashboard instead.
-#
-# Why this matters: when wrangler.toml exists, it is the SOLE source of truth
-# for the Pages project's env — the Cloudflare dashboard's "Environment
-# variables" UI is completely IGNORED. If you config env in the dashboard but
-# leave this file here with these demo values, your build will use THESE
-# values, not yours.
-#
-# See docs/deployment.md for the full guide.
-# ⚠️⚠️⚠️ END FORKER WARNING ⚠️⚠️⚠️
 
 # Cloudflare Pages configuration for local preview with Wrangler.
 #
@@ -35,44 +17,34 @@ pages_build_output_dir = "dist"
 
 [vars]
 # Site (must include https:// protocol — Astro validates this as a URL)
-SITE_URL = "https://anvil.wiki"
-# Legacy IndexNow override for the anvil.wiki demo deployment.
-# New forks generate and commit .indexnow-key during initialization.
-INDEXNOW_KEY = "736d8608fdec899849d382dffdaf4dda78605ffe0f40e2f1dbb57c7390341bed"
-# Giscus comments (DEMO — anvil.wiki points at PNGTRID/AnvilWiki Discussions)
-PUBLIC_GISCUS_REPO = "PNGTRID/AnvilWiki"
-PUBLIC_GISCUS_REPO_ID = "R_kgDOT1aRPQ"
-PUBLIC_GISCUS_CATEGORY = "Announcements"
-PUBLIC_GISCUS_CATEGORY_ID = "DIC_kwDOT1aRPc4DDODo"
+SITE_URL = "https://six-cats-under-wiki.pages.dev"
+# Legacy IndexNow override — new forks generate .indexnow-key automatically.
+# Leave blank unless migrating an existing env-backed deployment.
+#INDEXNOW_KEY = ""
+# Giscus comments — blank = comments disabled until you fill your own values.
+# See docs/comments.md for how to get these from giscus.app.
+PUBLIC_GISCUS_REPO = ""
+PUBLIC_GISCUS_REPO_ID = ""
+PUBLIC_GISCUS_CATEGORY = ""
+PUBLIC_GISCUS_CATEGORY_ID = ""
 PUBLIC_GISCUS_MAPPING = "pathname"
-# Sponsor card (empty = disabled, keeps Lighthouse 4×100 out of the box)
+# Sponsor card — blank = disabled. Fill PUBLIC_SPONSOR_URL to enable.
 PUBLIC_SPONSOR_URL = ""
 PUBLIC_SPONSOR_IMAGE_URL = ""
-# Cloudflare Web Analytics beacon token (empty = disabled)
+# Cloudflare Web Analytics — blank = disabled.
 PUBLIC_CF_BEACON_TOKEN = ""
-#
-# ─── Optional slots (empty = disabled) ─────────────────────────────────
-# Route (A) users: fill them HERE, not in the dashboard — the dashboard UI
-# is ignored while this file exists. Full reference: .env.example / docs/deployment.md
-#
-# Google AdSense (all 4 set = ads render at 3 positions)
+# Optional slots (empty = disabled) — fill HERE, not the dashboard:
 #PUBLIC_ADSENSE_CLIENT = ""
 #PUBLIC_ADSENSE_SLOT_STICKY = ""
 #PUBLIC_ADSENSE_SLOT_SIDEBAR = ""
 #PUBLIC_ADSENSE_SLOT_INCONTENT = ""
-# Adsterra (demo anvil.wiki units, live 2026-09-15) — each slot needs a matching
-# public/ads/<name>.html holding the unit's snippet (docs/ads.md 「广告位怎么挂」).
-# 160x300 = 手册页目录下粘性位+右侧页边; 160x600 = 手册页左右页边竖幅(≥1700px 视口);
-# sidebar-300x250 已建未挂载(唯一挂载点 WikiSidebar 在文章页恒 compact 不渲染广告,与
-# AdSense SidebarAd 同门,挂载权留给站长); sticky-320x50 = 文章页移动端底部锚位
-# (MobileAnchorAd,可一键关闭/零 CLS/同意后才加载;顶部 sticky 仍排除,StickyBanner 注释)。
-PUBLIC_ADSTERRA_SLOT_SIDEBAR_300X250 = "72f65aae2e14988904cffe17cfe697e2"
-PUBLIC_ADSTERRA_SLOT_INCONTENT_728X90 = "e0dce7760389a360cba34b93333ea2d0"
-PUBLIC_ADSTERRA_SLOT_NATIVE_BANNER = "8fabf9ea9ed2d89cba2ff9888f939c26"
-PUBLIC_ADSTERRA_SLOT_SIDEBAR_160X300 = "89fabda9f10bc13544cae84f0211d77c"
-PUBLIC_ADSTERRA_SLOT_SIDEBAR_160X600 = "fba4ed072bed8749c56ebcf099b30f0e"
-PUBLIC_ADSTERRA_SLOT_STICKY_320X50 = "e2ad36227bacdad94a4bfe6a9a6d3dac"
-# Google Analytics (consent-gated — loads only after the visitor accepts)
-PUBLIC_GA_ID = "G-X10CG7N6P6"
-# Google Search Console verification meta token
+# Adsterra — for each slot you enable, also create public/ads/<name>.html with
+# the snippet from the Adsterra dashboard (pattern: docs/ads.md 「广告位怎么挂」).
+#PUBLIC_ADSTERRA_SLOT_SIDEBAR_300X250 = ""
+#PUBLIC_ADSTERRA_SLOT_INCONTENT_728X90 = ""
+#PUBLIC_ADSTERRA_SLOT_NATIVE_BANNER = ""
+#PUBLIC_ADSTERRA_SLOT_STICKY_320X50 = ""
+#PUBLIC_ADSTERRA_SLOT_SIDEBAR_160X300 = ""
+#PUBLIC_ADSTERRA_SLOT_SIDEBAR_160X600 = ""
+#PUBLIC_GA_ID = ""
 #PUBLIC_GSC_VERIFICATION = ""

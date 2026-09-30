@@ -1,9 +1,28 @@
 {
   "version": 1,
   "entries": {
-    "en-bosses-frostbound-monarch.png": "83c71546",
-    "en-guides-forging-guide.png": "a68350d9",
-    "en-items-emberforged-armor-set.png": "e07ca063",
-    "en-items-forging-materials-guide.png": "c6db2dce"
+    "zh-guides-six-cats-under-walkthrough.png": "dc2a073a",
+    "en-faq-six-cats-under-faq.png": "8693124b",
+    "en-guides-six-cats-under-beginner-guide.png": "ed9a49aa",
+    "en-guides-six-cats-under-cats-ranked.png": "a9d40b7f",
+    "en-guides-six-cats-under-frederick-puzzle.png": "45e68854",
+    "en-guides-six-cats-under-goldfish-puzzle.png": "81b24410",
+    "en-guides-six-cats-under-sink-puzzle.png": "c32f5a92",
+    "zh-faq-six-cats-under-faq.png": "83da524c",
+    "zh-guides-six-cats-under-beginner-guide.png": "405698ac",
+    "zh-guides-six-cats-under-cats-ranked.png": "08cd30fa",
+    "zh-guides-six-cats-under-frederick-puzzle.png": "407650fd",
+    "zh-guides-six-cats-under-goldfish-puzzle.png": "bceb919d",
+    "zh-guides-six-cats-under-sink-puzzle.png": "402daab2",
+    "en-hints-six-cats-under-puzzle-hints.png": "8f2d5bad",
+    "zh-hints-six-cats-under-puzzle-hints.png": "dd31ef32",
+    "ja-faq-six-cats-under-faq.png": "c80adcf3",
+    "ja-guides-six-cats-under-beginner-guide.png": "33cfd5dd",
+    "ja-guides-six-cats-under-cats-ranked.png": "3c183461",
+    "ja-guides-six-cats-under-frederick-puzzle.png": "defeda00",
+    "ja-guides-six-cats-under-goldfish-puzzle.png": "7fe3781a",
+    "ja-guides-six-cats-under-sink-puzzle.png": "3f7c8236",
+    "ja-guides-six-cats-under-walkthrough.png": "a778b325",
+    "ja-hints-six-cats-under-puzzle-hints.png": "4cdf8614"
   }
 }

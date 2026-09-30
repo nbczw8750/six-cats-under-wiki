@@ -12,7 +12,7 @@
  * `apply-template` flips this to false when it removes the landing page —
  * the header link disappears together with the pages.
  */
-export const landingLinkEnabled = true;
+export const landingLinkEnabled = false;
 
 /**
  * Where the demo header's template entry points, and its visible copy. The

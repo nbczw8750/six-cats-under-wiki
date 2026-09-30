@@ -1,11 +1,11 @@
 {
-  "name": "Anvil Quest Wiki",
-  "short_name": "AQ Wiki",
-  "description": "Complete Anvil Quest wiki with boss guides, codes, and tier lists.",
+  "name": "Six Cats Under Wiki",
+  "short_name": "SCU Wiki",
+  "description": "Six Cats Under walkthrough, puzzle hints and FAQ. Learn how to wake Frederick and solve all puzzles in this itch.io ghost puzzle game.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#f36716",
+  "theme_color": "#a66530",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",

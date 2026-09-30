@@ -18,8 +18,6 @@ export interface AuthorInfo {
 export const authors: Record<string, AuthorInfo> = {
   // Example:
   // 'Yuan Ruiqin': { url: 'https://yuanruiqin.dev', sameAs: ['https://github.com/PNGTRID'] },
-  // DEMO (anvil.wiki) — removed by apply-template / setup.yml.
-  'Forge Master Kael': { url: '/about' },
 };
 
 /** Look up an author by frontmatter name (undefined = no entry). */

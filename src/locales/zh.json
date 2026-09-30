@@ -1,0 +1,246 @@
+{
+  "$schema": "../../docs/home.schema.json",
+  "site": {
+    "name": "Six Cats Under Wiki",
+    "shortName": "SCU Wiki",
+    "description": "Six Cats Under 攻略、解谜提示与常见问题。教你叫醒 Frederick,解开这款 itch.io 幽灵解谜游戏的全部谜题。",
+    "tagline": "一场幽灵解谜冒险:帮六只猫全部离开公寓",
+    "legalNotice": "Six Cats Under Wiki 是粉丝自建的社区站点,与游戏开发商无任何从属关系,也未获其背书。"
+  },
+  "nav": {
+    "home": "首页",
+    "toggleTheme": "切换主题",
+    "menu": "菜单",
+    "close": "关闭",
+    "search": "搜索",
+    "language": "语言",
+    "guides": "攻略",
+    "hints": "提示",
+    "faq": "FAQ"
+  },
+  "search": {
+    "placeholder": "搜索 Wiki...",
+    "noResults": "没有找到匹配结果",
+    "loadError": "搜索加载失败——请刷新页面后重试。"
+  },
+  "shared": {
+    "lastUpdated": "最后更新",
+    "publishedOn": "发布于",
+    "noArticles": "还没有文章,敬请期待!",
+    "defaultListDescription": "浏览所有 {title} 文章——流程攻略、技巧、提示与最新参考表,全部集中在这里。",
+    "relatedArticles": "相关文章",
+    "onThisPage": "本页目录",
+    "browseAll": "浏览全部",
+    "viewAll": "查看全部",
+    "commentsHeading": "评论",
+    "share": "分享",
+    "copyLink": "复制链接",
+    "copied": "已复制!",
+    "consentText": "我们使用 Cookie 进行统计分析和广告投放,以维持本站免费。",
+    "accept": "同意",
+    "decline": "拒绝",
+    "consentTitle": "Cookie",
+    "bossCard": {
+      "title": "Boss 概览",
+      "hp": "生命值",
+      "weakness": "弱点",
+      "resistant": "抗性",
+      "location": "位置",
+      "level": "建议等级"
+    },
+    "codesTable": {
+      "active": "有效兑换码",
+      "expired": "已过期兑换码",
+      "reward": "奖励",
+      "expires": "过期时间",
+      "source": "来源",
+      "code": "兑换码"
+    },
+    "codesFaq": [
+      {
+        "question": "怎么兑换兑换码?",
+        "answer": "打开游戏,点击右上角的设置齿轮,把兑换码粘贴进 Redeem Code 输入框后确认即可。兑换码区分大小写。"
+      },
+      {
+        "question": "为什么兑换码会失效?",
+        "answer": "兑换码按开发者设定的时间表过期(通常按月,或绑定更新节点),部分兑换码每个账号只能用一次。本页会定期重新测试。"
+      },
+      {
+        "question": "多久出一次新兑换码?",
+        "answer": "新兑换码通常随每次大型版本更新一起放出。把本页加入书签,每次补丁后回来看看。"
+      },
+      {
+        "question": "兑换码会过期吗?",
+        "answer": "会——大多数兑换码都有过期日期,显示在每个兑换码旁边。过期的兑换码会移到下方的过期表格。"
+      }
+    ],
+    "possiblyOutdated": "本攻略最后核对于",
+    "outdatedNote": "——游戏此后可能已有改动,部分内容或许已过时。",
+    "prevArticle": "上一篇",
+    "nextArticle": "下一篇",
+    "minuteRead": "分钟读完",
+    "wasThisHelpful": "这篇有帮助吗?",
+    "feedbackThanks": "感谢反馈!",
+    "sponsoredLabel": "赞助",
+    "relatedVideos": "相关视频",
+    "gallery": "图集",
+    "gameVersion": "游戏版本",
+    "allTags": "全部标签",
+    "tagsIndexDescription": "按主题浏览全部文章。",
+    "articlesCount": "篇文章",
+    "recentTitle": "最新更新",
+    "recentDescription": "全站最新文章与更新,按时间从新到旧排列。",
+    "sponsorTitle": "支持这个 Wiki",
+    "sponsorText": "如果这些攻略帮到了你,考虑支持一下本站。",
+    "sponsorButton": "支持我们",
+    "notFoundSearchHint": "试试直接在 Wiki 里搜索。",
+    "notFoundPopular": "热门页面",
+    "galleryLabels": {
+      "close": "关闭",
+      "prev": "上一张图片",
+      "next": "下一张图片"
+    },
+    "quickAnswer": "快速回答",
+    "skipToContent": "跳到正文",
+    "tapToCopy": "点按复制",
+    "open": "打开",
+    "playVideo": "播放视频",
+    "watchVideo": "观看视频",
+    "gameTrailer": "预告片",
+    "closeAd": "关闭广告",
+    "adLabel": "广告",
+    "codesFaqTitle": "兑换码常见问题",
+    "faqTitle": "常见问题",
+    "toggleTheme": "切换主题",
+    "themeToggleTitle": "浅色 / 深色 / AMOLED 纯黑",
+    "fallbackNotice": "英文回退内容",
+    "copyQuickAnswer": "复制快速回答",
+    "feedbackYes": "是",
+    "feedbackNo": "否",
+    "breadcrumbAria": "面包屑导航",
+    "wikiNavAria": "Wiki 导航",
+    "paginationAria": "文章翻页"
+  },
+  "overview": {
+    "guides": {
+      "overviewTitle": "全部攻略",
+      "overviewDescription": "Six Cats Under 全部攻略:完整流程、解谜步骤与进阶技巧,持续更新。"
+    },
+    "hints": {
+      "overviewTitle": "全部提示",
+      "overviewDescription": "按谜题给出的简短提示,卡关时先看一眼,不剧透完整解法。"
+    },
+    "faq": {
+      "overviewTitle": "全部 FAQ",
+      "overviewDescription": "关于 Six Cats Under 账号、玩法与常见疑问的解答。"
+    }
+  },
+  "home": {
+    "meta": {
+      "title": "Six Cats Under Wiki — 攻略、提示与常见问题",
+      "description": "Six Cats Under 攻略、解谜提示与常见问题。教你叫醒 Frederick,解开这款 itch.io 幽灵解谜游戏的全部谜题。"
+    },
+    "updates": {
+      "title": "最新更新"
+    },
+    "popular": {
+      "badge": "热门",
+      "title": "阅读最多",
+      "quickLinks": [
+        {
+          "label": "攻略",
+          "href": "/guides"
+        },
+        {
+          "label": "提示",
+          "href": "/hints"
+        },
+        {
+          "label": "常见问题",
+          "href": "/faq"
+        }
+      ]
+    },
+    "closingCta": {
+      "title": "开始你的 Six Cats Under 之旅",
+      "description": "收藏本 Wiki,每次游戏更新后回来看看。",
+      "primary": "浏览全部",
+      "secondary": "加入社区"
+    },
+    "hero": {
+      "badge": "粉丝自建 Wiki",
+      "title": "Six Cats Under Wiki",
+      "description": "Six Cats Under 全部攻略:流程、解谜提示与常见问题,教你唤醒每一只猫、打开前门。",
+      "ctaPrimary": "立即游玩",
+      "ctaSecondary": "浏览攻略"
+    },
+    "start": {
+      "badge": "快速开始",
+      "title": "快速上手",
+      "cards": [
+        {
+          "number": "1",
+          "title": "攻略",
+          "description": "完整流程与解谜步骤",
+          "icon": "lucide:book-open",
+          "href": "/guides"
+        },
+        {
+          "number": "2",
+          "title": "提示",
+          "description": "卡关时的单条小提示",
+          "icon": "lucide:lightbulb",
+          "href": "/hints"
+        },
+        {
+          "number": "3",
+          "title": "常见问题",
+          "description": "账号与玩法疑问解答",
+          "icon": "lucide:help-circle",
+          "href": "/faq"
+        }
+      ]
+    },
+    "explore": {
+      "title": "探索",
+      "description": "核心内容",
+      "modules": [
+        {
+          "order": 1,
+          "name": "全部攻略",
+          "description": "从新手攻略开始,逐步通关",
+          "href": "/guides",
+          "displayType": "badge-list",
+          "highlights": [
+            {
+              "label": "新手攻略",
+              "detail": "从这里开始",
+              "badge": "推荐"
+            }
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "title": "常见问题",
+      "description": "常见疑问",
+      "items": []
+    }
+  },
+  "footer": {
+    "playGame": "游玩 Six Cats Under",
+    "officialDiscord": "官方 Discord",
+    "officialYoutube": "官方 YouTube",
+    "officialTwitter": "官方 Twitter",
+    "officialReddit": "官方 Reddit",
+    "about": "关于",
+    "faq": "常见问题",
+    "privacyPolicy": "隐私政策",
+    "termsOfService": "服务条款",
+    "copyright": "版权声明",
+    "contact": "联系我们",
+    "copyrightText": "© 2026 Six Cats Under Wiki。保留所有权利。",
+    "community": "社区",
+    "legal": "法律信息"
+  }
+}
