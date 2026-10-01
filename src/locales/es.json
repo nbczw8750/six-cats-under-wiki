@@ -1,0 +1,246 @@
+{
+  "$schema": "../../docs/home.schema.json",
+  "site": {
+    "name": "Six Cats Under Wiki",
+    "shortName": "SCU Wiki",
+    "description": "Soluciones, pistas de rompecabezas y FAQ de Six Cats Under. Aprende a despertar a Frederick y a resolver todos los acertijos de este juego de fantasmas de itch.io.",
+    "tagline": "Una aventura de rompecabezas con fantasmas para sacar a los seis gatos del apartamento",
+    "legalNotice": "Six Cats Under Wiki es una comunidad creada por fans. No está afiliada ni respaldada por el desarrollador del juego."
+  },
+  "nav": {
+    "home": "Inicio",
+    "toggleTheme": "Cambiar tema",
+    "menu": "Menú",
+    "close": "Cerrar",
+    "search": "Buscar",
+    "language": "Idioma",
+    "guides": "Guías",
+    "hints": "Pistas",
+    "faq": "FAQ"
+  },
+  "search": {
+    "placeholder": "Busca en la wiki...",
+    "noResults": "No se encontraron resultados",
+    "loadError": "La búsqueda no se pudo cargar: recarga la página e inténtalo de nuevo."
+  },
+  "shared": {
+    "lastUpdated": "Última actualización",
+    "publishedOn": "Publicado",
+    "noArticles": "Aún no hay artículos. ¡Vuelve pronto!",
+    "defaultListDescription": "Explora todos los artículos de {title}: soluciones, consejos, pistas y tablas de referencia actualizadas, todo en un solo lugar.",
+    "relatedArticles": "Artículos relacionados",
+    "onThisPage": "En esta página",
+    "browseAll": "Explorar todo",
+    "viewAll": "Ver todos",
+    "commentsHeading": "Comentarios",
+    "share": "Compartir",
+    "copyLink": "Copiar enlace",
+    "copied": "¡Copiado!",
+    "consentText": "Usamos cookies para analítica y publicidad y así mantener este sitio gratuito.",
+    "accept": "Aceptar",
+    "decline": "Rechazar",
+    "consentTitle": "Cookies",
+    "bossCard": {
+      "title": "Resumen del jefe",
+      "hp": "HP",
+      "weakness": "Debilidad",
+      "resistant": "Resistencia",
+      "location": "Ubicación",
+      "level": "Niv. recomendado"
+    },
+    "codesTable": {
+      "active": "Códigos activos",
+      "expired": "Códigos caducados",
+      "reward": "Recompensa",
+      "expires": "Caduca",
+      "source": "Fuente",
+      "code": "Código"
+    },
+    "codesFaq": [
+      {
+        "question": "¿Cómo canjeo los códigos?",
+        "answer": "Abre el juego, toca el engranaje de la parte superior derecha, pega tu código en el campo «Canjear código» y confirma. Los códigos distinguen mayúsculas y minúsculas."
+      },
+      {
+        "question": "¿Por qué dejan de funcionar los códigos?",
+        "answer": "Los códigos caducan según un calendario fijado por el desarrollador (normalmente cada mes o ligado a hitos de actualización) y algunos son de un solo uso por cuenta. Esta página se vuelve a probar habitualmente."
+      },
+      {
+        "question": "¿Con qué frecuencia salen códigos nuevos?",
+        "answer": "Los códigos nuevos suelen llegar con cada gran actualización del juego. Guarda la página en marcadores y vuelve tras cada parche."
+      },
+      {
+        "question": "¿Los códigos caducan?",
+        "answer": "Sí: casi todos los códigos tienen fecha de caducidad, indicada junto al código. Los caducados pasan a la tabla de abajo."
+      }
+    ],
+    "possiblyOutdated": "Esta guía se revisó por última vez el",
+    "outdatedNote": "— es posible que el juego haya cambiado desde entonces. Algunos datos podrían estar desactualizados.",
+    "prevArticle": "Anterior",
+    "nextArticle": "Siguiente",
+    "minuteRead": "min de lectura",
+    "wasThisHelpful": "¿Te resultó útil?",
+    "feedbackThanks": "¡Gracias por el comentario!",
+    "sponsoredLabel": "Patrocinado",
+    "relatedVideos": "Vídeos relacionados",
+    "gallery": "Galería",
+    "gameVersion": "Versión del juego",
+    "allTags": "Todas las etiquetas",
+    "tagsIndexDescription": "Explora todos los artículos por tema.",
+    "articlesCount": "artículos",
+    "recentTitle": "Actualizaciones recientes",
+    "recentDescription": "Los últimos artículos y actualizaciones de toda la wiki, lo más reciente primero.",
+    "sponsorTitle": "Apoya esta wiki",
+    "sponsorText": "Si estas guías te sirvieron, considera apoyar el sitio.",
+    "sponsorButton": "Apóyanos",
+    "notFoundSearchHint": "Prueba a buscar en la wiki.",
+    "notFoundPopular": "Páginas populares",
+    "galleryLabels": {
+      "close": "Cerrar",
+      "prev": "Imagen anterior",
+      "next": "Imagen siguiente"
+    },
+    "quickAnswer": "Respuesta rápida",
+    "skipToContent": "Saltar al contenido",
+    "tapToCopy": "Toca para copiar",
+    "open": "Abrir",
+    "playVideo": "Reproducir vídeo",
+    "watchVideo": "Ver vídeo",
+    "gameTrailer": "tráiler",
+    "closeAd": "Cerrar anuncio",
+    "adLabel": "Publicidad",
+    "codesFaqTitle": "FAQ de códigos",
+    "faqTitle": "FAQ",
+    "toggleTheme": "Cambiar tema",
+    "themeToggleTitle": "Claro / Oscuro / AMOLED negro",
+    "fallbackNotice": "Versión en inglés",
+    "copyQuickAnswer": "Copiar respuesta rápida",
+    "feedbackYes": "Sí",
+    "feedbackNo": "No",
+    "breadcrumbAria": "Migas de pan",
+    "wikiNavAria": "Navegación de la wiki",
+    "paginationAria": "Paginación de artículos"
+  },
+  "overview": {
+    "guides": {
+      "overviewTitle": "Todas las guías",
+      "overviewDescription": "Todas las guías de Six Cats Under: desde la solución completa hasta el detalle de cada rompecabezas, actualizadas con regularidad."
+    },
+    "hints": {
+      "overviewTitle": "Todas las pistas",
+      "overviewDescription": "Pistas breves rompecabeza por rompecabezas. Míralas primero cuando te atasques: la solución completa se reserva para no spoilear."
+    },
+    "faq": {
+      "overviewTitle": "Todas las FAQ",
+      "overviewDescription": "Respuestas a las preguntas más frecuentes sobre Six Cats Under."
+    }
+  },
+  "home": {
+    "meta": {
+      "title": "Six Cats Under Wiki: guías, pistas y FAQ",
+      "description": "Soluciones, pistas de rompecabezas y FAQ de Six Cats Under. Aprende a despertar a Frederick y a resolver todos los acertijos de este juego de fantasmas de itch.io."
+    },
+    "updates": {
+      "title": "Actualizaciones recientes"
+    },
+    "popular": {
+      "badge": "Popular",
+      "title": "Más leídos",
+      "quickLinks": [
+        {
+          "label": "Guías",
+          "href": "/guides"
+        },
+        {
+          "label": "Pistas",
+          "href": "/hints"
+        },
+        {
+          "label": "FAQ",
+          "href": "/faq"
+        }
+      ]
+    },
+    "closingCta": {
+      "title": "Empieza tu aventura en Six Cats Under",
+      "description": "Guarda esta wiki en marcadores y vuelve tras cada actualización del juego.",
+      "primary": "Ver todo",
+      "secondary": "Únete a la comunidad"
+    },
+    "hero": {
+      "badge": "Wiki hecha por fans",
+      "title": "Six Cats Under Wiki",
+      "description": "Soluciones, pistas de rompecabezas y FAQ de Six Cats Under: así despertarás a Frederick y resolverás cada acertijo de este juego de fantasmas de itch.io.",
+      "ctaPrimary": "Jugar ahora",
+      "ctaSecondary": "Ver guías"
+    },
+    "start": {
+      "badge": "Inicio rápido",
+      "title": "Empieza directamente",
+      "cards": [
+        {
+          "number": "1",
+          "title": "Guías",
+          "description": "Solución completa y soluciones de acertijos",
+          "icon": "lucide:book-open",
+          "href": "/guides"
+        },
+        {
+          "number": "2",
+          "title": "Pistas",
+          "description": "Ayuda breve cuando te atasques",
+          "icon": "lucide:lightbulb",
+          "href": "/hints"
+        },
+        {
+          "number": "3",
+          "title": "FAQ",
+          "description": "Respuestas a tus dudas",
+          "icon": "lucide:help-circle",
+          "href": "/faq"
+        }
+      ]
+    },
+    "explore": {
+      "title": "Explora",
+      "description": "Lo esencial",
+      "modules": [
+        {
+          "order": 1,
+          "name": "Todas las guías",
+          "description": "Empieza por la solución y avanza paso a paso",
+          "href": "/guides",
+          "displayType": "badge-list",
+          "highlights": [
+            {
+              "label": "Guía para principiantes",
+              "detail": "Empieza aquí",
+              "badge": "Recomendado"
+            }
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "title": "FAQ",
+      "description": "Preguntas frecuentes",
+      "items": []
+    }
+  },
+  "footer": {
+    "playGame": "Jugar a Six Cats Under",
+    "officialDiscord": "Discord oficial",
+    "officialYoutube": "YouTube oficial",
+    "officialTwitter": "Twitter oficial",
+    "officialReddit": "Reddit oficial",
+    "about": "Acerca de",
+    "faq": "FAQ",
+    "privacyPolicy": "Política de privacidad",
+    "termsOfService": "Términos del servicio",
+    "copyright": "Derechos de autor",
+    "contact": "Contacto",
+    "copyrightText": "© 2026 Six Cats Under Wiki. Todos los derechos reservados.",
+    "community": "Comunidad",
+    "legal": "Legal"
+  }
+}

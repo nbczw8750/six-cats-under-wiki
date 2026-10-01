@@ -1,0 +1,246 @@
+{
+  "$schema": "../../docs/home.schema.json",
+  "site": {
+    "name": "Six Cats Under Wiki",
+    "shortName": "SCU Wiki",
+    "description": "Six Cats Under Lösungswege, Rätsel-Hinweise und FAQ. So weckst du Frederick und löst alle Rätsel in diesem Geister-Rätselspiel von itch.io.",
+    "tagline": "Ein geisterhaftes Rätselabenteuer, um alle sechs Katzen aus der Wohnung zu bringen",
+    "legalNotice": "Six Cats Under Wiki ist eine rein von Fans betriebene Community-Seite. Keine Verbindung zum Entwickler, keine offizielle Zustimmung."
+  },
+  "nav": {
+    "home": "Startseite",
+    "toggleTheme": "Design umschalten",
+    "menu": "Menü",
+    "close": "Schließen",
+    "search": "Suche",
+    "language": "Sprache",
+    "guides": "Guides",
+    "hints": "Hinweise",
+    "faq": "FAQ"
+  },
+  "search": {
+    "placeholder": "Wiki durchsuchen...",
+    "noResults": "Keine Treffer gefunden",
+    "loadError": "Die Suche konnte nicht geladen werden — Seite neu laden und erneut versuchen."
+  },
+  "shared": {
+    "lastUpdated": "Zuletzt aktualisiert",
+    "publishedOn": "Veröffentlicht",
+    "noArticles": "Noch keine Artikel. Schau bald wieder vorbei!",
+    "defaultListDescription": "Alle Artikel zu {title} — Lösungswege, Tipps, Hinweise und aktuelle Nachschlagetabellen, alles an einem Ort.",
+    "relatedArticles": "Verwandte Artikel",
+    "onThisPage": "Auf dieser Seite",
+    "browseAll": "Alle ansehen",
+    "viewAll": "Alle anzeigen",
+    "commentsHeading": "Kommentare",
+    "share": "Teilen",
+    "copyLink": "Link kopieren",
+    "copied": "Kopiert!",
+    "consentText": "Wir verwenden Cookies für Analyse und Werbung, damit diese Seite kostenlos bleibt.",
+    "accept": "Akzeptieren",
+    "decline": "Ablehnen",
+    "consentTitle": "Cookies",
+    "bossCard": {
+      "title": "Boss-Übersicht",
+      "hp": "HP",
+      "weakness": "Schwäche",
+      "resistant": "Resistent",
+      "location": "Ort",
+      "level": "Empf. Level"
+    },
+    "codesTable": {
+      "active": "Aktive Codes",
+      "expired": "Abgelaufene Codes",
+      "reward": "Belohnung",
+      "expires": "Läuft ab",
+      "source": "Quelle",
+      "code": "Code"
+    },
+    "codesFaq": [
+      {
+        "question": "Wie löse ich Codes ein?",
+        "answer": "Öffne das Spiel, klicke oben rechts auf das Zahnrad, füge deinen Code in das Feld „Code einlösen“ ein und bestätige. Codes unterscheiden Groß- und Kleinschreibung."
+      },
+      {
+        "question": "Warum funktionieren Codes nicht mehr?",
+        "answer": "Codes laufen nach einem vom Entwickler festgelegten Zeitplan ab (meist monatlich oder gebunden an Update-Meilensteine), manche gelten nur einmal pro Konto. Diese Seite wird regelmäßig neu getestet."
+      },
+      {
+        "question": "Wie oft kommen neue Codes?",
+        "answer": "Neue Codes kommen meist mit jedem großen Spiel-Update. Speichere diese Seite als Lesezeichen und schau nach jedem Patch vorbei."
+      },
+      {
+        "question": "Haben Codes ein Ablaufdatum?",
+        "answer": "Ja — die meisten Codes haben ein Ablaufdatum, das direkt neben dem Code steht. Abgelaufene Codes wandern in die Tabelle weiter unten."
+      }
+    ],
+    "possiblyOutdated": "Diese Anleitung wurde zuletzt geprüft am",
+    "outdatedNote": "— das Spiel könnte sich seitdem geändert haben. Einige Details sind möglicherweise veraltet.",
+    "prevArticle": "Zurück",
+    "nextArticle": "Weiter",
+    "minuteRead": "Min. Lesezeit",
+    "wasThisHelpful": "War diese Seite hilfreich?",
+    "feedbackThanks": "Danke für das Feedback!",
+    "sponsoredLabel": "Gesponsert",
+    "relatedVideos": "Verwandte Videos",
+    "gallery": "Galerie",
+    "gameVersion": "Spielversion",
+    "allTags": "Alle Tags",
+    "tagsIndexDescription": "Alle Artikel nach Thema durchstöbern.",
+    "articlesCount": "Artikel",
+    "recentTitle": "Neueste Updates",
+    "recentDescription": "Die neuesten Artikel und Updates im Wiki, neueste zuerst.",
+    "sponsorTitle": "Diese Wiki unterstützen",
+    "sponsorText": "Wenn dir diese Anleitungen geholfen haben, erwäge eine Unterstützung der Seite.",
+    "sponsorButton": "Unterstützen",
+    "notFoundSearchHint": "Versuch eine Suche im Wiki.",
+    "notFoundPopular": "Beliebte Seiten",
+    "galleryLabels": {
+      "close": "Schließen",
+      "prev": "Vorheriges Bild",
+      "next": "Nächstes Bild"
+    },
+    "quickAnswer": "Kurzantwort",
+    "skipToContent": "Zum Inhalt springen",
+    "tapToCopy": "Zum Kopieren tippen",
+    "open": "Öffnen",
+    "playVideo": "Video abspielen",
+    "watchVideo": "Video ansehen",
+    "gameTrailer": "Trailer",
+    "closeAd": "Werbung schließen",
+    "adLabel": "Werbung",
+    "codesFaqTitle": "Codes-FAQ",
+    "faqTitle": "FAQ",
+    "toggleTheme": "Design umschalten",
+    "themeToggleTitle": "Hell / Dunkel / AMOLED-Schwarz",
+    "fallbackNotice": "Englische Fassung",
+    "copyQuickAnswer": "Kurzantwort kopieren",
+    "feedbackYes": "Ja",
+    "feedbackNo": "Nein",
+    "breadcrumbAria": "Brotkrümelpfad",
+    "wikiNavAria": "Wiki-Navigation",
+    "paginationAria": "Artikel-Pagination"
+  },
+  "overview": {
+    "guides": {
+      "overviewTitle": "Alle Guides",
+      "overviewDescription": "Alle Guides für Six Cats Under — vom kompletten Lösungsweg bis zur Lösung einzelner Rätsel, laufend aktualisiert."
+    },
+    "hints": {
+      "overviewTitle": "Alle Hinweise",
+      "overviewDescription": "Kurze Hinweise Rätsel für Rätsel. Erst hier nachschauen, wenn du feststeckst — die vollständige Lösung bleibt spoilerfrei."
+    },
+    "faq": {
+      "overviewTitle": "Alle FAQs",
+      "overviewDescription": "Antworten auf die häufigsten Fragen zu Six Cats Under."
+    }
+  },
+  "home": {
+    "meta": {
+      "title": "Six Cats Under Wiki — Anleitungen, Hinweise & FAQ",
+      "description": "Six Cats Under Lösungswege, Rätsel-Hinweise und FAQ. So weckst du Frederick und löst alle Rätsel in diesem Geister-Rätselspiel von itch.io."
+    },
+    "updates": {
+      "title": "Neueste Updates"
+    },
+    "popular": {
+      "badge": "Beliebt",
+      "title": "Meistgelesen",
+      "quickLinks": [
+        {
+          "label": "Guides",
+          "href": "/guides"
+        },
+        {
+          "label": "Hinweise",
+          "href": "/hints"
+        },
+        {
+          "label": "FAQ",
+          "href": "/faq"
+        }
+      ]
+    },
+    "closingCta": {
+      "title": "Beginne dein Six Cats Under Abenteuer",
+      "description": "Speichere dieses Wiki als Lesezeichen und schau nach jedem Spiel-Update vorbei.",
+      "primary": "Alle ansehen",
+      "secondary": "Community beitreten"
+    },
+    "hero": {
+      "badge": "Fan-Wiki",
+      "title": "Six Cats Under Wiki",
+      "description": "Lösungswege, Rätsel-Hinweise und FAQ für Six Cats Under — so weckst du Frederick und löst jedes Rätsel in diesem Geister-Abenteuer von itch.io.",
+      "ctaPrimary": "Jetzt spielen",
+      "ctaSecondary": "Guides ansehen"
+    },
+    "start": {
+      "badge": "Schnellstart",
+      "title": "Direkt loslegen",
+      "cards": [
+        {
+          "number": "1",
+          "title": "Guides",
+          "description": "Kompletter Lösungsweg und Rätsellösungen",
+          "icon": "lucide:book-open",
+          "href": "/guides"
+        },
+        {
+          "number": "2",
+          "title": "Hinweise",
+          "description": "Kurze Hilfe, wenn du feststeckst",
+          "icon": "lucide:lightbulb",
+          "href": "/hints"
+        },
+        {
+          "number": "3",
+          "title": "FAQ",
+          "description": "Antworten auf offene Fragen",
+          "icon": "lucide:help-circle",
+          "href": "/faq"
+        }
+      ]
+    },
+    "explore": {
+      "title": "Entdecken",
+      "description": "Das Wichtigste",
+      "modules": [
+        {
+          "order": 1,
+          "name": "Alle Guides",
+          "description": "Starte mit dem Lösungsweg und arbeite dich voran",
+          "href": "/guides",
+          "displayType": "badge-list",
+          "highlights": [
+            {
+              "label": "Einsteiger-Guide",
+              "detail": "Hier starten",
+              "badge": "Empfohlen"
+            }
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "title": "FAQ",
+      "description": "Häufige Fragen",
+      "items": []
+    }
+  },
+  "footer": {
+    "playGame": "Six Cats Under spielen",
+    "officialDiscord": "Offizielles Discord",
+    "officialYoutube": "Offizielles YouTube",
+    "officialTwitter": "Offizielles Twitter",
+    "officialReddit": "Offizielles Reddit",
+    "about": "Über uns",
+    "faq": "FAQ",
+    "privacyPolicy": "Datenschutzerklärung",
+    "termsOfService": "Nutzungsbedingungen",
+    "copyright": "Urheberrecht",
+    "contact": "Kontakt",
+    "copyrightText": "© 2026 Six Cats Under Wiki. Alle Rechte vorbehalten.",
+    "community": "Community",
+    "legal": "Rechtliches"
+  }
+}

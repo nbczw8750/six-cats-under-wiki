@@ -1,0 +1,206 @@
+---
+title: 'Guía de Six Cats Under: despierta a los seis gatos y abre la puerta'
+description: 'Guía completa de Six Cats Under: 7 pasos ordenados con capturas: despierta a Geoffrey, resuelve el fregadero, fríe el pez dorado y baja a Frederick de la nevera.'
+category: 'guides'
+image: '../../../../assets/covers/es-guides-six-cats-under-walkthrough.png'
+date: 2026-09-29
+lastModified: 2026-09-30
+tags: ['guide', 'beginner']
+draft: false
+summary: 'Six Cats Under termina cuando los seis gatos salen por la puerta principal. Esta guía sigue el orden real del juego en 7 pasos: despierta a Geoffrey, deja entrar las moscas, coge el mando, cambia al canal del pastel, resuelve el fregadero, fríe el pez dorado y luego lleva el olor a Frederick con el ventilador. Cada paso lleva su captura.'
+gallery:
+  - image: '../../../../../public/images/articles/Geoffrey.png'
+    caption: 'Geoffrey, el gato negro: cada cadena de acertijos de esta guía empieza con él'
+    alt: 'Gato negro de pixel art con ojos blancos pequeños y nariz rosa, echado en el suelo'
+  - image: '../../../../../public/images/articles/Frederick.png'
+    caption: 'Frederick duerme sobre la nevera hasta que el olor del pescado frito sube hasta él'
+    alt: 'Gato rechoncho atigrado blanco y marrón de pixel art descansando sobre una nevera blanca'
+  - image: '../../../../../public/images/articles/Spoc.png'
+    caption: 'Spoc, el gato blanco puro: araña el sofá y tira el mando de la TV al suelo'
+    alt: 'Gato blanco puro y esbelto de pixel art con ojos negros finos junto a un sillón'
+  - image: '../../../../../public/images/articles/Pumpkin.png'
+    caption: 'Pumpkin se queda en la estantería del salón y sale con los demás al final'
+    alt: 'Gato hueso pálido de pixel art con ojos cuadrados oscuros y hocico pequeño, agachado en una estantería'
+  - image: '../../../../../public/images/articles/Baroness.png'
+    caption: 'Baroness espera en la cama del dormitorio y sale en cuanto se abre la puerta'
+    alt: 'Gato atigrado naranja de pixel art con marcas faciales finas y oscuras y orejas interiores pálidas, sentado'
+  - image: '../../../../../public/images/articles/Mr.Spock.png'
+    caption: 'Mr.Spock observa desde encima de la puerta del baño y no toma parte en ningún acertijo'
+    alt: 'Gato atigrado marrón claro de pixel art tendido sobre el marco de la puerta del baño con papel higiénico debajo'
+faq:
+  - question: '¿Cómo se termina Six Cats Under?'
+    answer: 'Sigue los 7 pasos en orden: despierta a Geoffrey, deja entrar las moscas, coge el mando, cambia al canal del pastel, resuelve el fregadero, desbloquea la comida de peces y fríe el pez dorado, y luego lleva el olor a Frederick con el ventilador. Cuando salte de la nevera, los seis gatos salen juntos por la puerta principal.'
+  - question: '¿Por qué el pez dorado no cae a la sartén?'
+    answer: 'Geoffrey debe estar justo al lado del acuario cuando lo alimentes: termina el fregadero en el paso 5 para que primero suba a la encimera. Después de alimentarlo, abre la estufa para calentar la sartén y el pez dorado cae dentro.'
+  - question: '¿Por qué puedo abrir la puerta y la partida no termina?'
+    answer: 'La puerta se desbloquea ya con la descarga del váter en el paso 1, pero eso no es la meta: Frederick sigue dormido sobre la nevera. Fríe el pez dorado y sube el olor hasta él antes de abrir la puerta.'
+  - question: '¿Cómo funciona el juguete del ratón rosa?'
+    answer: 'Chilla y asusta a Geoffrey, y es el disparador del acertijo del fregadero. Orden completo: haz clic en el ratón, haz clic en la toalla del pájaro (barre hacia el fregadero), cambia al canal del león, vuelve a hacer clic en el ratón y después llena el fregadero de agua.'
+  - question: '¿Qué cambia el mando de la TV?'
+    answer: 'Alterna exactamente entre dos canales: horneado de pastel, que baja a Geoffrey a jugar con la lana derramada, y rugido de león, una de las condiciones del acertijo del fregadero.'
+  - question: '¿Hay cronómetro o alguna manera de morir?'
+    answer: 'No. No hay mecánica de muerte ni límite de tiempo: cada interacción se puede repetir las veces que quieras hasta que los gatos reaccionen como necesitas.'
+---
+
+import Callout from '~/components/mdx/Callout.astro';
+import Accordion from '~/components/mdx/Accordion.astro';
+import StatBar from '~/components/article/StatBar.astro';
+
+Six Cats Under es un corto juego de acertijos de pixel art con apuntar y clicar que se ejecuta directamente en el navegador desde itch.io. Juegas como el fantasma de una abuela que falleció inesperadamente y ahora está atrapada en su propio piso; su único deseo es sacar a sus seis gatos con seguridad. Esta guía sigue el orden real del juego y divide la partida en 7 pasos, cada uno con su captura: síguela y terminarás el juego.
+
+**¿Prefieres verlo? Vídeo completo de la partida (2 min 37 s, todos los pasos):**
+
+<video controls preload="metadata" playsinline width="960" height="540" class="aspect-video w-full rounded-lg bg-black" src="/videos/six-cats-under-walkthrough.mp4">
+  Tu navegador no puede reproducir este vídeo; simplemente sigue los pasos con capturas de abajo.
+</video>
+
+## ¿Cuál es el objetivo?
+
+Sacar a los seis gatos del piso por la puerta principal. Nunca controlas un gato directamente: haces clic en objetos de las estancias para desencadenar eventos que mueven a los gatos, y la partida termina cuando el último gato cruza el umbral. El piso es pequeño, así que todo el juego es una cadena conectada de interacciones en lugar de niveles separados.
+
+| Dato | Detalle |
+| --- | --- |
+| Género | Pixel art, acertijos de un jugador con apuntar y clicar |
+| Plataforma | Se juega directamente en el navegador desde itch.io |
+| Estados de fallo | Ninguno: no hay mecánica de muerte ni límite de tiempo |
+| Condición de victoria | Los seis gatos salen por la puerta principal |
+| Regla de reintento | Repite cualquier interacción las veces que necesites |
+| Historia | Una abuela muere inesperadamente, su alma queda atrapada en el piso y su deseo es rescatar a sus seis gatos |
+
+El juego lleva la cuenta de una sola cosa, y una barra llena significa que has terminado:
+
+<StatBar label="Progreso de la huida" value={100} note="6 / 6 gatos fuera = terminado · Medio · 2-3 min" />
+
+Nota: la puerta principal se desbloquea ya con la descarga del váter en el paso 1, pero eso no es la victoria, porque Frederick todavía se niega a dejar la parte superior de la nevera.
+
+## ¿Qué seis gatos tienen que salir?
+
+Seis gatos abandonan el piso, y solo tres de ellos llevan pasos de acertijo en esta guía: Geoffrey, el gato negro, mueve casi todos los acertijos; Spoc tira el mando de la TV; y Frederick, el gato gordo sobre la nevera, es el más difícil de despertar. Los otros tres, Pumpkin, Baroness y Mr.Spock, no participan en los acertijos y simplemente salen en cuanto la puerta está abierta.
+
+| Gato | Detalle conocido | Papel en los acertijos |
+| --- | --- | --- |
+| Geoffrey | Gato negro sólido estilo pixel, ojos blancos pequeños, nariz rosa, postura echado | Núcleo de casi todos los acertijos del piso |
+| Spoc | Gato blanco puro estilo pixel, ojos negros finos, nariz rosa pequeña, cuerpo esbelto, junto al sillón al lado del sofá | Araña el sofá y tira el mando de la TV al suelo |
+| Pumpkin | Gato hueso pálido estilo pixel, ojos cuadrados oscuros, hocico pequeño, agachado en la estantería del salón | Sin interacción en acertijos; solo sale al final |
+| Baroness | Gato atigrado naranja estilo pixel con marcas faciales finas y oscuras, orejas interiores pálidas, sentado en la cama del dormitorio | Sin interacción en acertijos; solo sale al final |
+| Mr.Spock | Gato atigrado marrón claro estilo pixel, ojos oscuros y redondos, cuerpo estirado en horizontal, sobre el marco de la puerta del baño | Sin interacción en acertijos; solo sale al final |
+| Frederick | Gato rechoncho atigrado blanco y marrón estilo pixel, descansando sobre la nevera | El más difícil de despertar: necesita el olor del pescado frito |
+
+## Paso 1: ¿Cómo despiertas a Geoffrey, el gato negro?
+
+1. Haz clic en el reloj de pared para que suene: Geoffrey despierta.
+
+![Haz clic en el reloj de pared para que suene y despierta al gato negro Geoffrey](/images/articles/点击墙上时钟.webp)
+
+2. Tira de la cisterna: el sonido sigue atrayendo al gato negro, así que Geoffrey se mueve a donde lo necesites. La puerta principal se desbloquea tras esto, pero Frederick todavía se niega a irse.
+
+![Tira de la cisterna para que el sonido atraiga a Geoffrey](/images/articles/点击马桶冲水.webp)
+
+3. Haz clic en el papel higiénico y vuelve a tirar de la cisterna: Geoffrey golpea el papel, lo que desencadena la cadena siguiente.
+
+![Haz clic en el papel higiénico](/images/articles/点厕纸.webp)
+
+![Vuelve a tirar de la cisterna para que Geoffrey golpee el papel](/images/articles/再次冲水.webp)
+
+<Callout type="tip" title="Cebo reutilizable">La descarga del váter es tu cebo reutilizable durante todo el juego. Siempre que un gato esté en el sitio equivocado, tira de la cisterna y el gato negro vuelve: repetirlo no hace perder nada.</Callout>
+
+## Paso 2: ¿Cómo dejas entrar las moscas y vuelcas la cesta de lana?
+
+1. Haz clic en la ventana para abrirla y dejar que las moscas entren en la estancia.
+
+![Abre la ventana y deja entrar las moscas](/images/articles/点击窗户打开.webp)
+
+2. Enciende la lámpara de mesa: una mosca se posa en la luz.
+
+![Enciende la lámpara de mesa para que una mosca se pose en ella](/images/articles/打开台灯.webp)
+
+3. Geoffrey salta hacia la mosca de la lámpara, vuelca la cesta de lana y derrama la lana por el suelo: la necesitas en el paso 4.
+
+## Paso 3: ¿Cómo consigues el mando de la TV?
+
+1. Haz clic en el ventilador de la estantería y gíralo hacia la planta de interior.
+
+![Gira el ventilador de la estantería hacia la planta](/images/articles/点架子上风扇.webp)
+
+2. Conéctalo y enciéndelo: las hojas en movimiento atraen a Spoc, que está detrás de la silla; araña el sofá y saca el mando de las almohadillas.
+
+![Conecta el ventilador y enciéndelo](/images/articles/插上电源打开风扇.webp)
+
+3. Recoge el mando (parece un pequeño bloque de madera) y enciende la TV.
+
+![Recoge el mando y enciende la TV](/images/articles/打开电视.webp)
+
+<Callout type="tip" title="Recuerda dónde dejas el ventilador">El mismo ventilador se reutiliza en el paso 7: anota dónde lo dejas antes de moverlo.</Callout>
+
+## Paso 4: El canal del pastel y la bola de lana
+
+1. Usa el mando para cambiar la TV al canal de horneado de pastel.
+
+![Cambia la TV al canal de horneado de pastel](/images/articles/切到蛋糕烘焙画面.webp)
+
+2. Haz clic en la bola de lana derramada del suelo: Geoffrey baja a jugar con ella.
+
+![Haz clic en la bola de lana derramada del suelo](/images/articles/点击地上散开的毛线球.webp)
+
+## Paso 5: El acertijo del fregadero (¡el punto de bloqueo más frecuente!)
+
+<Callout type="warn" title="El paso del canal del león es esencial">Aquí es donde se atascan la mayoría de los jugadores: si te saltas el canal del rugido de león, el ratón rosa no hace nada por mucho que hagas clic. Sigue exactamente el orden de abajo.</Callout>
+
+1. Haz clic en el juguete del ratón rosa de la encimera: chilla y asusta a Geoffrey.
+
+![Haz clic en el juguete del ratón rosa de la encimera](/images/articles/点击台面上粉色老鼠玩具.webp)
+
+2. Haz clic en la toalla del pájaro colgada: Geoffrey la barre dentro del fregadero.
+
+![Haz clic en la toalla del pájaro colgada](/images/articles/点击挂着的鸟毛巾.webp)
+
+3. Usa el mando para cambiar la TV al canal del rugido de león.
+
+![Cambia la TV al canal del rugido de león](/images/articles/切换电视频道%20→%20狮子吼叫频道.webp)
+
+4. Vuelve a hacer clic en el juguete del ratón rosa.
+
+![Vuelve a hacer clic en el juguete del ratón rosa](/images/articles/再次点老鼠玩具.webp)
+
+5. Abre el grifo y llena el fregadero de agua: para entonces Geoffrey ya ha saltado a la encimera de la cocina, así que las dos acciones del paso 6 necesitan que esté junto al acuario.
+
+![Abre el grifo y llena el fregadero de agua](/images/articles/打开水龙头.webp)
+
+<Accordion title="¿Para qué sirve el paso de la toalla?">
+Barrer la toalla dentro del fregadero prepara las condiciones del disparador posterior: junto con el canal del león y el fregadero lleno, hace que Geoffrey se acerque al acuario de la encimera de la cocina, la posición que necesita el paso del pez dorado.
+</Accordion>
+
+## Paso 6: ¿Cómo desbloqueas la comida de peces y alimentas al pez dorado?
+
+1. Haz clic en la figura de corazón colgada del techo: cae sobre la bolsa de comida de peces y la desbloquea.
+
+![Haz clic en la figura del corazón para desbloquear la comida de peces](/images/articles/点击上方悬挂的爱心装饰.webp)
+
+2. Asegúrate de que Geoffrey está junto al acuario (así que el paso 5 debe hacerse primero) y luego haz clic en la comida para alimentar al pez dorado.
+
+![Alimenta al pez dorado mientras Geoffrey está junto al acuario](/images/articles/点击鱼食.webp)
+
+## Paso 7: Fríe el pescado y lleva el olor a Frederick (la cadena final)
+
+1. Abre la estufa y calienta la sartén: el pez dorado cae a la sartén y se fríe, y el olor empieza a extenderse por la cocina.
+
+![Abre la estufa y calienta la sartén](/images/articles/点开炉灶.webp)
+
+2. Ajusta de nuevo el ventilador para que apunte a la parte superior de la nevera y enciéndelo: el olor sube hasta Frederick.
+
+![Apunta el ventilador a la parte superior de la nevera y enciéndelo](/images/articles/再次调整风扇方向.webp)
+
+3. Frederick huele el pescado frito y baja saltando de la nevera: los seis gatos están reunidos, salen juntos por la puerta principal y el juego está completado.
+
+<Callout type="warn" title="Puerta desbloqueada no es victoria">Abrir la puerta antes de que Frederick despierte no termina nada ni cuesta nada: termina el paso 7 y despiértalo primero. Con los seis gatos reunidos, esa misma puerta cierra el juego.</Callout>
+
+## ¿Por qué no se van los gatos del piso?
+
+| Lo que ves | Por qué pasa | Solución |
+| --- | --- | --- |
+| El pez dorado nunca cae a la sartén | Geoffrey no está junto al acuario | Termina el fregadero en el paso 5 para que suba a la encimera, luego aliméntalo y abre la estufa |
+| La puerta está desbloqueada pero la partida no termina | Frederick sigue dormido en la nevera | Fríe el pez dorado, apunta el ventilador a la parte superior de la nevera y enciéndelo |
+
+## ¿Hay algo más que convenga saber antes de empezar?
+
+Nada es de un solo uso: no hay muerte ni reloj, así que si un clic no hace nada, haz clic en todo lo demás en otro orden. El ciclo habitual es probar una interacción, observar qué gato reacciona y repetirla en otro sitio: la descarga del váter y el ventilador son las dos herramientas que reutilizas en la mitad de los acertijos. Para todo lo que vaya más allá de esta sola partida, el resto del sitio te cubre: [guías](/es/guides/) tiene las guías más largas, [pistas](/es/hints/) ofrece ayudas por acertijo si quieres no atascarte, y [FAQ](/es/faq/) responde las preguntas generales.

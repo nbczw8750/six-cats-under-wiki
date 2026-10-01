@@ -12,6 +12,8 @@
 import en from '~/locales/en.json';
 import zh from '~/locales/zh.json';
 import ja from '~/locales/ja.json';
+import de from '~/locales/de.json';
+import es from '~/locales/es.json';
 
 import { defaultLocale, type Locale } from './routing';
 
@@ -19,6 +21,8 @@ const messages: Record<Locale, Record<string, unknown>> = {
   en: en as Record<string, unknown>,
   zh: zh as Record<string, unknown>,
   ja: ja as Record<string, unknown>,
+  de: de as Record<string, unknown>,
+  es: es as Record<string, unknown>,
 };
 
 /**
