@@ -1,25 +1,42 @@
 ---
 /**
- * LegalPage layout — wraps legal pages (About/Privacy/Terms/Copyright).
+ * LegalPage layout — wraps legal pages (About/Privacy/Terms/Copyright/Contact).
  *
  * Per PRD, legal page body text is hardcoded English (not translated) but
  * the surrounding chrome (nav, footer, theme) respects the current locale.
+ *
+ * Emits the full 5-locale hreflang cluster: every locale gets every legal
+ * page (both routes generate from the shared LEGAL_PAGES list), so unlike
+ * articles there is never a "missing translation" case to filter. Before
+ * this layout passed `alternates`, legal pages declared only `x-default`
+ * while article pages declared the whole cluster — an inconsistent signal
+ * for the same site (AEO audit finding, 2026-10-04).
  */
 import LocaleLayout from './LocaleLayout.astro';
-import { type Locale } from '~/i18n/routing';
+import { locales, type Locale } from '~/i18n/routing';
 import { site } from '~/config/site';
+import { LEGAL_LAST_UPDATED, LEGAL_TITLES, type LegalPageKey } from '~/config/legal';
+import { languageAlternates, localizePath } from '~/lib/url';
 
 interface Props {
   locale: Locale;
-  title: string;
+  /** Shared slug key — drives title, hreflang URLs and the lastmod stamp. */
+  page: LegalPageKey;
   description?: string;
-  /** ISO date string for "last updated". */
+  /** ISO date string for "last updated" (defaults to the shared stamp). */
   lastUpdated?: string;
 }
-const { locale, title, description = `${title} for ${site.name}.`, lastUpdated } = Astro.props;
+const {
+  locale,
+  page,
+  description = `${LEGAL_TITLES[page]} for ${site.name}.`,
+  lastUpdated = LEGAL_LAST_UPDATED,
+} = Astro.props;
+const title = LEGAL_TITLES[page];
+const alternates = languageAlternates((loc) => localizePath(`/${page}`, loc), locales);
 ---
 
-<LocaleLayout locale={locale} title={title} description={description}>
+<LocaleLayout locale={locale} title={title} description={description} alternates={alternates}>
   <article class="mx-auto max-w-3xl">
     <h1 class="text-3xl font-extrabold tracking-tight md:text-4xl">{title}</h1>
     {lastUpdated && <p class="mt-2 text-sm text-muted-foreground">Last updated: {lastUpdated}</p>}

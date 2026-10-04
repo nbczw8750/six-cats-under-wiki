@@ -11,6 +11,7 @@ export {
   getEntryWithFallback,
   getEntriesByCategory,
   localesForEntry,
+  localesForArticles,
   localesForCategory,
   getRecentEntries,
   getRelatedEntries,
@@ -28,6 +29,7 @@ export {
   isPossiblyOutdated,
   selectRelatedEntries,
   estimateReadMinutes,
+  cardLanguageBadges,
   STALE_AFTER_DAYS,
   STALE_CATEGORIES,
 } from '~/lib/content-utils';

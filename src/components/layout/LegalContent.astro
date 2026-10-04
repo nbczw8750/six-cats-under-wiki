@@ -4,9 +4,10 @@
  * Renders different content based on the `page` prop. English only (per PRD).
  */
 import { site } from '~/config/site';
+import type { LegalPageKey } from '~/config/legal';
 
 interface Props {
-  page: 'about' | 'privacy-policy' | 'terms-of-service' | 'copyright' | 'contact';
+  page: LegalPageKey;
 }
 const { page } = Astro.props;
 const game = site.game.name;

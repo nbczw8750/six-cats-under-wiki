@@ -9,6 +9,7 @@ import * as path from 'node:path';
 import { locales, defaultLocale } from './src/i18n/routing';
 import { CONTENT_TYPES } from './src/config/navigation';
 import { site } from './src/config/site';
+import { LEGAL_PAGES, LEGAL_LAST_UPDATED } from './src/config/legal';
 import { fallbackDetailPaths } from './src/lib/fallback-paths';
 
 /**
@@ -192,6 +193,24 @@ function buildLastmodMap(
     }
   }
 
+  // Legal pages: hand-written .astro routes with no frontmatter to scan, so
+  // they get their <lastmod> from the shared LEGAL_LAST_UPDATED stamp (the
+  // same date the page shows as "Last updated:"). Without this their sitemap
+  // entries shipped as bare <loc> while article entries carried lastmod — an
+  // inconsistency for the one field Google says it actually trusts for crawl
+  // scheduling (AEO audit finding, 2026-10-04).
+  const legalDate = new Date(`${LEGAL_LAST_UPDATED}T00:00:00.000Z`);
+  if (!Number.isNaN(legalDate.getTime())) {
+    const iso = legalDate.toISOString();
+    for (const page of LEGAL_PAGES) {
+      map.set(`/${page}`, iso);
+      for (const l of locales) {
+        if (l === defaultLocale) continue;
+        map.set(`/${l}/${page}`, iso);
+      }
+    }
+  }
+
   return map;
 }
 
@@ -262,6 +281,28 @@ function alternatesFor(pagePath: string): Array<{ lang: string; url: string }> |
       }));
     }
   }
+  // Legal pages: hand-written routes, all 5 locales have all 5 pages (both
+  // routes generate from the same LEGAL_PAGES list), so the cluster is full
+  // and unconditional — no coverage map to consult. Mirrors LegalPage's
+  // <head> output so the sitemap and the page never disagree (Google
+  // discards hreflang clusters whose signals conflict). Slash-free pagePath
+  // looks like `/about` or `/de/about`.
+  const legalParts = pagePath.split('/').filter(Boolean);
+  if (legalParts.length <= 2) {
+    const legalSlug = legalParts.length === 2 ? legalParts[1] : legalParts[0];
+    const legalLocale = legalParts.length === 2 ? legalParts[0] : defaultLocale;
+    if (
+      (LEGAL_PAGES as readonly string[]).includes(legalSlug) &&
+      (locales as readonly string[]).includes(legalLocale)
+    ) {
+      return locales.map((l) => ({
+        lang: l,
+        url: new URL(l === defaultLocale ? `/${legalSlug}/` : `/${l}/${legalSlug}/`, siteOrigin)
+          .href,
+      }));
+    }
+  }
+
   // Category list: only locales that actually have an article in the
   // category (empty-state lists are noindex and excluded from the sitemap —
   // advertising them as alternates would invite crawling thin content).

@@ -16,7 +16,7 @@
  */
 
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { defaultLocale, type Locale } from './routing';
+import { defaultLocale, locales, type Locale } from './routing';
 import { slugifyTag } from '~/lib/url';
 import { selectRelatedEntries, newestFirst } from '~/lib/content-utils';
 
@@ -122,6 +122,52 @@ export async function localesForEntry(category: string, slug: string): Promise<L
     }
   }
   return Array.from(found);
+}
+
+/**
+ * Language availability for a LIST page's whole entry set in ONE collection
+ * scan. List cards render a language-chip row per entry, so calling
+ * localesForEntry per card would rescan the collection once per card
+ * (RecentPage renders up to 200 entries).
+ *
+ * Key: `${category}/${slug}` -> locales, in routing order. Applies the same
+ * predicate as localesForEntry (published + not noindex), so a chip never
+ * links to an English-fallback URL that renders noindex. Missing key means
+ * "not in any locale" (can't happen for entries the caller just listed).
+ */
+export async function localesForArticles(
+  entries: readonly WikiEntry[],
+): Promise<Map<string, Locale[]>> {
+  const out = new Map<string, Locale[]>();
+  if (entries.length === 0) return out;
+
+  const wanted = new Set<string>();
+  for (const e of entries) {
+    const p = parseEntryId(e.id);
+    if (p) wanted.add(`${p.category}/${p.slug}`);
+  }
+
+  const found = new Map<string, Set<Locale>>();
+  const all = await getCollection('wiki');
+  for (const entry of all) {
+    const p = parseEntryId(entry.id);
+    if (!p) continue;
+    const key = `${p.category}/${p.slug}`;
+    if (!wanted.has(key)) continue;
+    if (!isPublished(entry) || entry.data.noindex) continue;
+    let set = found.get(key);
+    if (!set) {
+      set = new Set<Locale>();
+      found.set(key, set);
+    }
+    set.add(p.locale);
+  }
+
+  for (const key of wanted) {
+    const set = found.get(key);
+    out.set(key, set ? locales.filter((l) => set.has(l)) : []);
+  }
+  return out;
 }
 
 /**

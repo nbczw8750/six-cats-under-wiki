@@ -1,0 +1,67 @@
+---
+/**
+ * Language badges — one short chip per locale the article really exists in.
+ *
+ * Rendered inside list cards (ListPage / RecentPage / TagListPage) as a
+ * cross-language entry point: the hreflang cluster in <head> is invisible to
+ * readers, so a reader who wants the German page otherwise has to hunt the
+ * header switcher. Chips link straight to the same article in each locale.
+ *
+ * Contract:
+ *   - `available` comes from localesForArticles() / localesForEntry(), which
+ *     exclude drafts and noindex versions — a chip never links to an
+ *     English-fallback URL that renders noindex (dead end for crawlers).
+ *   - Fewer than 2 locales → renders nothing: a lone chip would only echo the
+ *     card's own language, and a single-language fork sees zero visual change.
+ *   - Current locale is a highlighted <span>, not a link — it would be a
+ *     self-link, and clicks fall through to the card's stretched link instead.
+ *   - Labels come from routing.ts LOCALE_LABELS (full language names), so no
+ *     new i18n keys; the visible text is the uppercase locale code.
+ *
+ * The card is a <div> with a stretched link (see callers), so this wrapper is
+ * pointer-events-none while each real link opts back in — otherwise the chip
+ * row would punch dead zones into the clickable card around the chips.
+ */
+import { LOCALE_LABELS, type Locale } from '~/i18n/routing';
+import { cardLanguageBadges } from '~/lib/content-utils';
+import { detailPath } from '~/lib/url';
+
+interface Props {
+  /** Locale of the LIST page currently rendered (highlighted chip). */
+  locale: Locale;
+  category: string;
+  slug: string;
+  /** Full locale coverage for this article, from localesForArticles(). */
+  available: readonly Locale[];
+}
+const { locale, category, slug, available } = Astro.props;
+const chips = cardLanguageBadges(available);
+---
+
+{
+  chips.length > 0 && (
+    <span class="pointer-events-none relative z-10 mt-3 flex flex-wrap gap-1">
+      {chips.map((l) =>
+        l === locale ? (
+          <span
+            aria-current="true"
+            title={LOCALE_LABELS[l]}
+            class="rounded border border-nav/50 bg-nav/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-wide text-nav"
+          >
+            {l}
+          </span>
+        ) : (
+          <a
+            href={detailPath(category, slug, l)}
+            hreflang={l}
+            title={LOCALE_LABELS[l]}
+            aria-label={LOCALE_LABELS[l]}
+            class="pointer-events-auto rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-wide text-muted-foreground transition hover:border-nav/50 hover:text-nav"
+          >
+            {l}
+          </a>
+        ),
+      )}
+    </span>
+  )
+}

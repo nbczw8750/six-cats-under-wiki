@@ -1,5 +1,28 @@
 import { describe, it, expect } from 'vitest';
-import { parseEntryId, isPossiblyOutdated, selectRelatedEntries, estimateReadMinutes, STALE_AFTER_DAYS } from '~/lib/content-utils';
+import { parseEntryId, isPossiblyOutdated, selectRelatedEntries, estimateReadMinutes, cardLanguageBadges, STALE_AFTER_DAYS } from '~/lib/content-utils';
+
+describe('cardLanguageBadges', () => {
+  it('emits nothing for a single-locale article (no self-echo chip)', () => {
+    expect(cardLanguageBadges(['en'])).toEqual([]);
+    expect(cardLanguageBadges([])).toEqual([]);
+  });
+
+  it('keeps every locale that really has the article', () => {
+    expect(cardLanguageBadges(['en', 'de'])).toEqual(['en', 'de']);
+    expect(cardLanguageBadges(['en', 'zh', 'ja', 'de', 'es'])).toHaveLength(5);
+  });
+
+  it('normalizes to routing order regardless of scan order', () => {
+    // localesForArticles walks the collection in filesystem order, which can
+    // surface de before en — the chips must read the same on every card.
+    expect(cardLanguageBadges(['de', 'ja', 'en'])).toEqual(['en', 'ja', 'de']);
+    expect(cardLanguageBadges(['en', 'ja', 'de'])).toEqual(['en', 'ja', 'de']);
+  });
+
+  it('deduplicates a locale repeated across nested slug entries', () => {
+    expect(cardLanguageBadges(['en', 'en', 'de'])).toEqual(['en', 'de']);
+  });
+});
 
 describe('parseEntryId', () => {
   it('parses a simple id into locale/category/slug', () => {

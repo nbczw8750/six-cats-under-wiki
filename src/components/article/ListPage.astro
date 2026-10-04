@@ -11,7 +11,8 @@ import ArticleCover from '~/components/article/ArticleCover.astro';
 import { NAVIGATION_CONFIG } from '~/config/navigation';
 import { type Locale } from '~/i18n/routing';
 import { getUi } from '~/i18n/ui';
-import { getEntriesByCategory, parseEntryId } from '~/lib/content';
+import { getEntriesByCategory, localesForArticles, parseEntryId } from '~/lib/content';
+import LangBadges from '~/components/article/LangBadges.astro';
 import { itemListJsonLd, pageTitle, simpleBreadcrumbJsonLd } from '~/lib/seo';
 import { detailPath, homeUrl, listPath } from '~/lib/url';
 
@@ -40,6 +41,8 @@ const description =
   (String(shared.defaultListDescription ?? '').replace('{title}', title) || title);
 
 const entries = await getEntriesByCategory(category, locale);
+// Language chips for every card in ONE collection scan (see localesForArticles).
+const langMap = await localesForArticles(entries);
 
 const jsonLd = [
   // Empty ItemList (itemListElement: []) is invalid structured data — only
@@ -102,18 +105,34 @@ const jsonLd = [
           {entries.map((entry) => {
             const slug = parseEntryId(entry.id)?.slug ?? '';
             return (
-              <a href={detailPath(category, slug, locale)} class="card p-5">
+              // Card is a <div> with a stretched link on the title: the whole
+              // card stays clickable, but the language chips need to be real
+              // links inside it (a nested <a> inside a card <a> is invalid).
+              <div class="card p-5 relative">
                 {entry.data.image && <ArticleCover src={entry.data.image} />}
-                <h2 class="font-semibold leading-snug">{entry.data.title}</h2>
+                <h2 class="font-semibold leading-snug">
+                  <a
+                    href={detailPath(category, slug, locale)}
+                    class="after:absolute after:inset-0 after:content-['']"
+                  >
+                    {entry.data.title}
+                  </a>
+                </h2>
                 <p class="mt-1 line-clamp-2 text-sm text-muted-foreground">
                   {entry.data.description}
                 </p>
+                <LangBadges
+                  locale={locale}
+                  category={category}
+                  slug={slug}
+                  available={langMap.get(`${category}/${slug}`) ?? []}
+                />
                 <p class="mt-3 text-xs text-muted-foreground">
                   {entry.data.lastModified
                     ? `${shared.lastUpdated}: ${entry.data.lastModified.toLocaleDateString(locale, { timeZone: 'UTC' })}`
                     : `${shared.publishedOn}: ${entry.data.date.toLocaleDateString(locale, { timeZone: 'UTC' })}`}
                 </p>
-              </a>
+              </div>
             );
           })}
         </div>

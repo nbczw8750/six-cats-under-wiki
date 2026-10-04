@@ -4,7 +4,7 @@
  * tested; these can). Re-exported through src/lib/content.ts for callers.
  */
 
-import { isLocale, type Locale } from '~/i18n/routing';
+import { isLocale, locales, type Locale } from '~/i18n/routing';
 
 /**
  * Parse an entry id like "en/bosses/emberfang" or "ja/bosses/sub/emberfang" into parts.
@@ -20,6 +20,27 @@ export function parseEntryId(
   const [locale, category, ...rest] = parts;
   if (!isLocale(locale)) return null;
   return { locale, category, slug: rest.join('/') };
+}
+
+/**
+ * Language chips for a list card: the locales where the article really
+ * exists, in routing order (so a card reads EN DE ES JA ZH everywhere
+ * instead of following filesystem scan order).
+ *
+ * Returns [] when fewer than 2 locales qualify — a lone chip would only
+ * echo the card's own language and give nothing to click, and a fork
+ * running a single language must see ZERO visual change on its cards
+ * (the badges are an addition, not a restyle).
+ *
+ * Callers pass `localesForEntry` output, which already excludes drafts and
+ * noindex versions: every chip therefore links to a page that both exists
+ * and wants to be crawled — never to an English-fallback /{locale}/ URL
+ * that renders noindex.
+ */
+export function cardLanguageBadges(available: readonly Locale[]): Locale[] {
+  const unique = Array.from(new Set(available));
+  if (unique.length < 2) return [];
+  return locales.filter((l) => unique.includes(l));
 }
 
 /**
