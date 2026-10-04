@@ -74,12 +74,17 @@ export const site: SiteConfig = {
   social: {
     official: 'https://teambeanloop.itch.io/six-cats-under',
   },
+  // Values verified 2026-10-04 against the itch.io page ("Six Cats Under by
+  // Team Bean Loop"), howlongtobeat and the Flash Gaming Wiki entry (which
+  // dates the itch.io release to 2020-05-16; itch.io's "Top free games from
+  // 2020" agrees). These four feed About/legal copy, VideoGame JSON-LD and
+  // llms.txt — a shifted value here ships machine-readable nonsense.
   game: {
     name: 'Six Cats Under',
-    platform: 'itch.io / thevincet / Puzzle, Adventure',
-    developer: '2021-04-02',
-    genre: 'en,zh',
-    releaseDate: 'guides,hints,faq',
+    platform: 'itch.io',
+    developer: 'Team Bean Loop',
+    genre: 'pixel-art single-player point-and-click puzzle',
+    releaseDate: '2020-05-16',
   },
   // og:image dims of the SHIPPED hero.webp — if you replace public/images/hero.webp,
   // update these in src/config/site.ts to match (wrong dims mis-crop share cards).
