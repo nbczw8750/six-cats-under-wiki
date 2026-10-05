@@ -1,3 +1,6 @@
+import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import { canOffload, OFFLOAD_TIMEOUT_MS, WatchdogTimeout, watchdogTimeoutFix, withWatchdog } from '../src/mcp/offload.js';
 import { submitLockPath } from '../src/core/gitops.js';
@@ -39,12 +42,37 @@ describe('watchdog timeout self-rescue guidance', () => {
   // "Another submit is already running" with the server's own pid. The
   // timeout error must hand the user the exact lock file path.
   it('submit guidance names the exact leftover lock path for the site', () => {
-    const cwd = process.cwd();
+    // Hermetic site root: this fork deleted wrangler.toml (settings live in
+    // the Cloudflare dashboard) and .env is gitignored, so loadSiteConfig()
+    // throws on a fresh checkout — which is exactly what turned the CI
+    // ops-toolkit job red. Instead of inheriting the repo's own config state,
+    // point the helper at a temp site. The .env sits one level ABOVE cwd on
+    // purpose: the message must then name the config-RESOLVED root's lock,
+    // not the cwd-derived fallback, so the assertion still discriminates.
+    const siteRoot = mkdtempSync(join(tmpdir(), 'anvil-ops-site-'));
+    const cwd = join(siteRoot, 'subdir');
+    mkdirSync(cwd);
+    writeFileSync(join(siteRoot, '.env'), 'SITE_URL=https://example.test\n', 'utf8');
     const fix = watchdogTimeoutFix('submit', cwd);
     expect(fix).toMatch(/lock/i);
+    const expected = submitLockPath(loadSiteConfig(cwd).root);
+    expect(expected, 'the .env must resolve a root above cwd or this asserts nothing').not.toBe(
+      submitLockPath(cwd),
+    );
     // The path in the message must be THE lock path acquireSubmitLock
     // created for this site — a stale hint would point at a non-lock file.
-    expect(fix).toContain(submitLockPath(loadSiteConfig(cwd).root));
+    expect(fix).toContain(expected);
+  });
+
+  it('falls back to the cwd-derived lock when the site has no config at all', () => {
+    // The other half, and this fork's actual state on CI: neither wrangler.toml
+    // nor .env exists, so leftoverSubmitLockPath() takes its catch branch. The
+    // hint must then name the lock derived from cwd — anything else points at a
+    // file that was never created.
+    const cwd = mkdtempSync(join(tmpdir(), 'anvil-ops-noconf-'));
+    const fix = watchdogTimeoutFix('submit', cwd);
+    expect(fix).toMatch(/lock/i);
+    expect(fix).toContain(submitLockPath(cwd));
   });
 
   it('audit guidance stays lock-free (audit never takes the submit lock)', () => {

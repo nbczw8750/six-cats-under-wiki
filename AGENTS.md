@@ -122,7 +122,7 @@ Standalone npm package (`anvilwiki-ops`, semver 1.0.5 as of v2.29.1, published t
 ```bash
 cd tools/anvil-ops
 pnpm install   # own pnpm-workspace.yaml (allowBuilds) — do NOT remove: without it the root workspace hijacks installs (node_modules stays empty)
-pnpm test      # 174 tests
+pnpm test      # 175 tests
 pnpm typecheck && pnpm build
 ```
 
