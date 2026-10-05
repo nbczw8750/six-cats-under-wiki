@@ -38,12 +38,20 @@ describe('CHANGELOG release contract', () => {
     }
   });
 
-  test('PROJECT_VERSION stays in sync with package.json (version 五处 release checklist, now gated)', () => {
+  test('package.json version stays in sync with the newest CHANGELOG release (release checklist, now gated)', () => {
+    // Fork note: this used to read `PROJECT_VERSION` out of
+    // src/config/landing-shared.ts — that constant lived in the marketing
+    // landing layer, which this fork removed entirely (no src/config/landing*.ts
+    // remain), so the old assertion died with the file (ENOENT). The release
+    // contract it actually gated — "the version you ship is the version the
+    // changelog says you shipped" — is preserved here against the two sources
+    // that still exist: package.json and the topmost `## [x.y.z]` section.
     const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) as { version: string };
-    const shared = readFileSync(join(root, 'src/config/landing-shared.ts'), 'utf8');
-    const projectVersion = shared.match(/PROJECT_VERSION = '([^']+)'/)?.[1];
-    expect(projectVersion, "src/config/landing-shared.ts must keep PROJECT_VERSION = '<package.json version>'").toBe(
+    const latest = changelog.match(/^## \[(\d+\.\d+\.\d+)\]/m)?.[1];
+    expect(latest, 'at least one released version section must exist').toBeDefined();
+    expect(
       pkg.version,
-    );
+      'package.json version must equal the newest ## [x.y.z] section in CHANGELOG.md',
+    ).toBe(latest);
   });
 });

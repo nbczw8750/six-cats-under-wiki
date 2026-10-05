@@ -762,10 +762,18 @@ describe('hyphen locales (zh-tw / pt-br) generate legal TypeScript', () => {
 });
 
 describe('demo locale deletion is content-aware (rebranded locales must survive re-runs)', () => {
-  test('the shipped demo locale files still carry the site.name marker (marker drift guard)', () => {
-    for (const locale of ['en', 'ja']) {
-      const raw = readFileSync(join(repoRoot, 'src/locales', `${locale}.json`), 'utf8');
-      expect(isDemoLocaleContent(raw)).toBe(true);
+  test('no shipped locale file reads as demo content (rebranded-fork marker drift guard)', () => {
+    // Same raw-content decision as the template-side guard, inverted: the
+    // clearing step deletes any locale that still parses as demo, so in a
+    // rebranded fork a locale carrying the demo name would be DELETED on the
+    // next re-run. The template repo pins "marker present"; this fork pins
+    // "marker absent" for every locale it ships (en/ja/zh/de/es) — an upstream
+    // merge that reintroduces the demo identity goes red here.
+    const locales = readdirSync(join(repoRoot, 'src/locales')).filter((f) => f.endsWith('.json'));
+    expect(locales.length, 'src/locales must still ship locale JSON').toBeGreaterThan(1);
+    for (const file of locales) {
+      const raw = readFileSync(join(repoRoot, 'src/locales', file), 'utf8');
+      expect(isDemoLocaleContent(raw), `src/locales/${file} must not read as demo content`).toBe(false);
     }
   });
 
@@ -789,11 +797,14 @@ describe('demo locale deletion is content-aware (rebranded locales must survive 
 });
 
 describe('demo article clearing is content-aware (re-runs must keep user work)', () => {
-  test('every shipped demo article carries the demo-game marker (marker drift guard)', () => {
-    // Mirrors the locale marker guard above: if a template author ships a demo
-    // article that never mentions the demo game, content-aware clearing would
-    // KEEP it forever — this goes red in the template repo until the article
-    // carries the marker. Vacuous in forks after a first-run clear.
+  test('no shipped article carries the demo-game marker (rebranded-fork marker drift guard)', () => {
+    // Mirrors the locale marker guard above, inverted: content-aware clearing
+    // deletes any article that still mentions the demo game, so a rebranded
+    // fork must ship ZERO demo-marked articles — a leftover demo article would
+    // be silently deleted on the next re-run, while an upstream merge that
+    // reintroduces demo copy must go red here. The template repo asserts the
+    // opposite half (every demo article marked, so the clear matches them);
+    // both halves guard the same raw-content decision.
     const base = join(repoRoot, 'src/content/wiki');
     const walk = (dir: string): string[] =>
       existsSync(dir)
@@ -806,12 +817,12 @@ describe('demo article clearing is content-aware (re-runs must keep user work)',
           )
         : [];
     const files = walk(base);
-    expect(files.length, 'the template repo should ship demo wiki articles').toBeGreaterThan(0);
+    expect(files.length, 'the repo must still ship wiki articles').toBeGreaterThan(0);
     for (const file of files) {
       expect(
         isDemoArticleContent(readFileSync(file, 'utf8')),
-        `${file} lacks the demo-game marker (${DEMO_GAME_NAMES.join(', ')}) — content-aware clearing would keep it`,
-      ).toBe(true);
+        `${file} still carries the demo-game marker (${DEMO_GAME_NAMES.join(', ')}) — content-aware clearing would delete it on re-run`,
+      ).toBe(false);
     }
   });
 
@@ -867,27 +878,50 @@ describe('setup.yml demo-author removal still matches the real authors.ts', () =
     // re.sub replaces ALL occurrences → the `g` flag.
     const demoAuthorRe = new RegExp(pyPattern, 'g');
     const src = readFileSync(join(repoRoot, 'src/config/authors.ts'), 'utf8');
+    // Fork-side invariant: this repo ships NO demo author, so the removal step
+    // must be a byte-for-byte no-op against the real file — a non-empty match
+    // here would mean the pattern has started eating user-authored content.
+    expect(src, 'shipped authors.ts still contains the demo author').not.toContain('Forge Master Kael');
+    expect(src, 'shipped authors.ts still contains the DEMO marker line').not.toContain('// DEMO');
     const after = src.replace(demoAuthorRe, '\n');
-    // The demo identity is gone — comment line AND entry line.
-    expect(after).not.toContain('Forge Master Kael');
-    expect(after).not.toContain('// DEMO');
-    // Byte-preservation oracle: the demo block is the comment line directly
-    // above the entry line; deleting exactly those two lines must equal the
-    // regex output — anything else the regex touched fails here.
-    const lines = src.split('\n');
-    const start = lines.findIndex((l) => l.includes('// DEMO'));
-    const end = lines.findIndex((l) => l.includes("'Forge Master Kael'"));
+    expect(after).toBe(src);
+    // Byte-preservation oracle, kept alive on a demo-shaped FIXTURE: the
+    // shipped file no longer carries the block, so the pattern itself is now
+    // exercised against the exact two-line shape setup.yml targets. Deleting
+    // exactly those two lines must equal the regex output — anything else the
+    // pattern touched fails here.
+    const fixture = [
+      'export const authors: Record<string, AuthorInfo> = {',
+      '  // Example:',
+      "  // 'Yuan Ruiqin': { url: 'https://yuanruiqin.dev', sameAs: ['https://github.com/PNGTRID'] },",
+      '  // DEMO author - dropped during fork initialization',
+      "  'Forge Master Kael': { url: 'https://forge.example' },",
+      '};',
+      '',
+      '/** Look up an author by frontmatter name (undefined = no entry). */',
+      'export function getAuthor(name: string | undefined): AuthorInfo | undefined {',
+      '  if (!name) return undefined;',
+      '  return authors[name];',
+      '}',
+      '',
+    ].join('\n');
+    const fixtureAfter = fixture.replace(demoAuthorRe, '\n');
+    expect(fixtureAfter).not.toContain('Forge Master Kael');
+    expect(fixtureAfter).not.toContain('// DEMO');
+    const fixtureLines = fixture.split('\n');
+    const start = fixtureLines.findIndex((l) => l.includes('// DEMO'));
+    const end = fixtureLines.findIndex((l) => l.includes("'Forge Master Kael'"));
     expect(start).toBeGreaterThan(-1);
     expect(end).toBe(start + 1);
-    const expected = [...lines.slice(0, start), ...lines.slice(end + 1)].join('\n');
-    expect(after).toBe(expected);
+    const expected = [...fixtureLines.slice(0, start), ...fixtureLines.slice(end + 1)].join('\n');
+    expect(fixtureAfter).toBe(expected);
     // The user-owned scaffolding survives untouched — the example comment,
-    // the (now empty) registry object still closing cleanly right after it,
+    // the registry object still closing cleanly right after it,
     // and the getAuthor helper that follows the registry in the real file.
-    expect(after).toContain("// 'Yuan Ruiqin'");
-    expect(after).toContain('export const authors: Record<string, AuthorInfo> = {');
-    expect(after).toMatch(/'] },\n\};\n/);
-    expect(after).toContain('export function getAuthor');
+    expect(fixtureAfter).toContain("// 'Yuan Ruiqin'");
+    expect(fixtureAfter).toContain('export const authors: Record<string, AuthorInfo> = {');
+    expect(fixtureAfter).toMatch(/'] },\n\};\n/);
+    expect(fixtureAfter).toContain('export function getAuthor');
   });
 });
 
@@ -995,12 +1029,21 @@ describe('re-run identity detection (S12: re-run = confirm current, never demo d
     expect(empty.releaseDate).toBe('');
   });
 
-  test('the shipped demo site.ts parses as the demo identity (drift guard)', () => {
+  test('the shipped site.ts parses as a NON-demo identity (rebranded-fork drift guard)', () => {
+    // Inverted twin of the template-side guard: re-run identity detection asks
+    // "is this still the demo site?" and answers PROMPT-with-demo-defaults when
+    // it is. A rebranded fork must answer the other way — if a future merge
+    // drifts site.ts back to the demo identity, the next apply-template run
+    // would re-prompt for identity and hand out demo defaults instead of
+    // confirming what is already on screen.
     const raw = readFileSync(join(repoRoot, 'src/config/site.ts'), 'utf8');
     const id = parseSiteTsIdentity(raw);
-    expect(id).not.toBeNull();
-    expect(isDemoSiteTsIdentity(id!)).toBe(true);
-    expect(DEMO_DOMAINS).toContain(id!.domain);
+    expect(id, 'site.ts must parse').not.toBeNull();
+    expect(isDemoSiteTsIdentity(id!), 'src/config/site.ts must not read as the demo identity').toBe(false);
+    // Drift-guard pairing, inverted with it: the fork's own domain must never
+    // be registered in DEMO_DOMAINS (a hit would let the demo clear/delete
+    // paths treat the real site as demo-owned).
+    expect(DEMO_DOMAINS, 'site.ts domain leaked into DEMO_DOMAINS').not.toContain(id!.domain);
   });
 });
 

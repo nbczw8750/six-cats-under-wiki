@@ -127,34 +127,44 @@ describe('shortTitle: nav label derivation', () => {
 describe('handbook search contract (Pagefind)', () => {
   const src = (rel: string) => fs.readFileSync(path.resolve(ROOT, rel), 'utf8');
 
-  it('HandbookChapter opts chapters into the search index', () => {
-    // Pagefind's rule: once ANY page on the site marks a data-pagefind-body
-    // (ArticlePage does), unmarked pages are excluded from the index
-    // entirely. Losing this attribute would silently drop all 41 lessons ×
-    // 2 locales out of site search while every gate stays green.
-    expect(src('src/components/landing/HandbookChapter.astro')).toContain('data-pagefind-body');
+  it('wiki articles opt into the search index', () => {
+    // Pagefind's rule: once ANY page on the site marks a data-pagefind-body,
+    // unmarked pages are excluded from the index entirely. Losing this
+    // attribute would silently drop every article out of site search while
+    // every gate stays green. (Upstream pinned the same attribute on
+    // HandbookChapter; this fork removed that component — ArticlePage is the
+    // only body marker left, see the test below.)
+    expect(src('src/components/article/ArticlePage.astro')).toContain('data-pagefind-body');
   });
 
-  it('landing content pages opt into the search index (community digest, comparison, landing home)', () => {
-    // 2026-09-13 全站搜索批:搜索入口从 docs 页扩到所有 landing 页,内容侧
-    // 同步进索引——社群精华页是用户点名的核心诉求(搜群聊精华要能命中)。
-    // These are page-level bodies; the floating WeChat QR widget stays
-    // unmarked so its card copy never becomes a result.
-    expect(src('src/components/landing/CommunityHighlights.astro')).toContain('data-pagefind-body');
-    expect(src('src/components/landing/ComparisonPage.astro')).toContain('data-pagefind-body');
-    for (const page of ['src/pages/landing.astro', 'src/pages/zh/landing.astro']) {
-      const html = src(page);
-      expect(html, `${page} marks its sections for Pagefind`).toContain('data-pagefind-body');
-      // QR float must sit outside the marked wrapper (never indexed).
-      expect(html.indexOf('data-pagefind-body')).toBeLessThan(html.indexOf('<Community'));
-    }
+  it('the landing layer this contract covered stays fully removed', () => {
+    // The three pages the original test marked (CommunityHighlights,
+    // ComparisonPage, landing.astro) were deleted wholesale with the marketing
+    // landing layer: no src/components/landing/, no /landing route, and
+    // nothing left to mark for Pagefind. Pinning the absence — not skipping —
+    // catches a half-finished re-merge that resurrects the components (they
+    // would render pages with no search index and no /landing route behind
+    // them) while all eight gates stay green.
+    const landingDir = path.resolve(ROOT, 'src/components/landing');
+    expect(fs.existsSync(landingDir), 'src/components/landing must stay removed').toBe(false);
+    const routes = fs.readdirSync(path.resolve(ROOT, 'src/pages'), { recursive: true }).filter((f) =>
+      /(^|[\\/])landing([\\/]|\.astro$)/.test(String(f)),
+    );
+    expect(routes, 'no /landing route may exist while the components are gone').toEqual([]);
+    expect(
+      fs.existsSync(path.resolve(ROOT, 'src/config/landing.ts')),
+      'src/config/landing.ts must stay removed with the layer',
+    ).toBe(false);
   });
 
-  it('LandingLayout ships the search button by default (whole site is searchable)', () => {
-    const layout = src('src/components/landing/LandingLayout.astro');
-    expect(layout).toContain('search = true');
+  it('the site header ships the search button by default (whole site is searchable)', () => {
+    // Upstream pinned this on LandingLayout; this fork's only site chrome is
+    // the wiki header, which must keep mounting the same SearchButton —
+    // dropping it takes the whole site out of reach of the search dialog.
+    const header = src('src/components/header/SiteHeader.astro');
+    expect(header).toContain('SearchButton');
     // Mobile menu search entry reuses the same dialog as the header trigger.
-    expect(layout).toContain('data-open-search');
+    expect(header).toContain('data-open-search');
     // 2026-09-13 移动端无反应修复:SearchButton 直接绑定 [data-open-search]
     // (不再经由布局脚本的 .click() 代理),inline 脚本保持 ES2018 语法可被
     // 老内核(微信 X5/旧 WKWebView)解析——?. 与 ?? 在不可转译的 inline 脚本

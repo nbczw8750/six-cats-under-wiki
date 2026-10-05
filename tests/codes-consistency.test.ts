@@ -1,140 +1,128 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
+import { CONTENT_TYPES, NAVIGATION_CONFIG } from '~/config/navigation';
 
 /**
- * Codes page ↔ homepage highlight consistency (第 23 轮 24h 审计发现①②的门禁半边).
+ * Codes surface ↔ homepage consistency (第 23 轮 24h 审计发现①②的门禁半边).
  *
- * A code's status lives in exactly one place — the codes page frontmatter —
- * while two surfaces re-state it by hand and can silently lag behind:
+ * A code's status used to live in exactly one place — the codes page
+ * frontmatter — while two surfaces re-stated it by hand (the home
+ * `explore` badge-list highlights, and the body's test-pass date sentence)
+ * and could silently lag behind. Those checks are pinned in the upstream
+ * template, where the `codes` content type ships.
  *
- *   1. `home.explore` badge-list highlights (en/ja): v2.35.0 (中-2) gated
- *      "expired shown as Active" in refresh-audit; this suite pins the
- *      remaining deterministic half in CI — highlight labels must equal the
- *      codes page's active set (both directions). A freshness batch that
- *      rotates codes must touch both surfaces in the same PR or this goes red.
- *   2. The body's test-pass date sentence: freshness batches that bump
- *      frontmatter lastModified but leave the intro's re-test date behind go
- *      red (the Sep 7 vs Sep 22 drift that shipped in 18a99c1).
+ * THIS FORK ships no `codes` content type at all: NAVIGATION_CONFIG /
+ * CONTENT_TYPES carry guides + hints + faq only, no locale has
+ * `src/content/wiki/<locale>/codes/`, and no article declares
+ * `category: codes`. The original per-locale assertions therefore cannot run
+ * (readCodesPage ENOENT) — they are replaced here by the same invariant's
+ * other half, which stays strict in both directions:
  *
- * Both checks are clock-free. A missing date sentence degrades to a pass,
- * mirroring refresh-audit's conservative fallback — but an unparseable
- * sentence that IS present still fails.
+ *   1. the removed content type must STAY removed (no directory, no article
+ *      declaring it, no config key advertising it);
+ *   2. the surviving hand-written surface (home `explore` badge-list) must
+ *      not link at the removed route — a `/codes` href here is a soft 404
+ *      shipped to every locale.
+ *
+ * All checks are clock-free and filesystem-only (no astro:content — see
+ * lib/url notes), exactly like the suite they replace.
  */
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const LOCALES = ['en', 'ja'] as const;
+const CONTENT_DIR = join(ROOT, 'src/content/wiki');
+const REMOVED_TYPE = 'codes';
 
-const MONTHS: Record<string, string> = {
-  January: '01',
-  February: '02',
-  March: '03',
-  April: '04',
-  May: '05',
-  June: '06',
-  July: '07',
-  August: '08',
-  September: '09',
-  October: '10',
-  November: '11',
-  December: '12',
-};
-
-interface CodeEntry {
-  code: string;
-  status: string;
+function localeDirs(): string[] {
+  if (!existsSync(CONTENT_DIR)) return [];
+  return readdirSync(CONTENT_DIR, { withFileTypes: true })
+    .filter((e) => e.isDirectory())
+    .map((e) => e.name)
+    .sort();
 }
 
-interface Highlight {
-  label?: string;
-}
-
-interface LocaleJson {
-  home?: {
-    explore?: {
-      modules?: Array<{ displayType?: string; highlights?: Highlight[] }>;
-    };
-  };
-}
-
-function readCodesPage(locale: string): string {
-  return readFileSync(join(ROOT, 'src/content/wiki', locale, 'codes/all-codes.mdx'), 'utf8');
+function walk(dir: string): string[] {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? walk(join(dir, e.name)) : /\.(mdx|md)$/.test(e.name) ? [join(dir, e.name)] : [],
+  );
 }
 
 function frontmatterOf(raw: string): string {
   return raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? '';
 }
 
-function bodyOf(raw: string): string {
-  const closing = raw.indexOf('\n---', 3);
-  return closing === -1 ? '' : raw.slice(closing + 4);
+interface ExploreModule {
+  displayType?: string;
+  href?: string;
+  highlights?: Array<{ label?: string }>;
 }
 
-function activeCodes(fm: string): string[] {
-  const entries: CodeEntry[] = [];
-  let current: CodeEntry | null = null;
-  for (const line of fm.split(/\r?\n/)) {
-    const code = line.match(/^\s*- code:\s*(.+?)\s*$/);
-    if (code) {
-      current = { code: code[1].replace(/^['"]|['"]$/g, ''), status: '' };
-      entries.push(current);
-      continue;
-    }
-    const status = line.match(/^\s+status:\s*(.+?)\s*$/);
-    if (status && current) current.status = status[1].replace(/^['"]|['"]$/g, '').toLowerCase();
-  }
-  return entries.filter((e) => e.status === 'active').map((e) => e.code);
-}
-
-function highlightLabels(locale: string): string[] {
-  const json = JSON.parse(readFileSync(join(ROOT, 'src/locales', `${locale}.json`), 'utf8')) as LocaleJson;
-  const labels: string[] = [];
+function badgeListHrefs(localeFile: string): string[] {
+  const json = JSON.parse(readFileSync(join(ROOT, 'src/locales', localeFile), 'utf8')) as {
+    home?: { explore?: { modules?: ExploreModule[] } };
+  };
+  const hrefs: string[] = [];
   for (const m of json.home?.explore?.modules ?? []) {
     if (m?.displayType !== 'badge-list') continue;
-    for (const h of m?.highlights ?? []) {
-      if (h?.label) labels.push(h.label);
+    if (m.href) hrefs.push(m.href);
+  }
+  return hrefs;
+}
+
+describe('codes page ↔ home highlights consistency (codes type removed in this fork)', () => {
+  it('no locale still ships a codes category directory', () => {
+    const locales = localeDirs();
+    expect(locales.length, 'src/content/wiki must still ship locales').toBeGreaterThan(1);
+    for (const locale of locales) {
+      expect(
+        existsSync(join(CONTENT_DIR, locale, REMOVED_TYPE)),
+        `src/content/wiki/${locale}/${REMOVED_TYPE}/ must stay removed — content-aware clearing and the category enum disagree otherwise`,
+      ).toBe(false);
     }
-  }
-  return labels;
-}
+  });
 
-function lastModifiedOf(fm: string): string | undefined {
-  return fm.match(/^lastModified:\s*(\d{4}-\d{2}-\d{2})\s*$/m)?.[1];
-}
-
-/** Normalize the body's test-pass sentence to ISO `YYYY-MM-DD`, or undefined. */
-function bodyTestPassDate(locale: string, body: string): string | undefined {
-  if (locale === 'en') {
-    const m = body.match(/full test history for this pass is ([A-Za-z]+) (\d{1,2}), (\d{4})/);
-    const mm = m ? MONTHS[m[1]] : undefined;
-    return m && mm ? `${m[3]}-${mm}-${m[2].padStart(2, '0')}` : undefined;
-  }
-  const m = body.match(/今回の検証日は(\d{4})年(\d{1,2})月(\d{1,2})日/);
-  return m ? `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}` : undefined;
-}
-
-describe('codes page ↔ home highlights consistency', () => {
-  for (const locale of LOCALES) {
-    it(`${locale}: home badge-list highlights mirror the codes page active set`, () => {
-      const active = activeCodes(frontmatterOf(readCodesPage(locale)));
-      expect(active.length, 'codes page should have at least one active code').toBeGreaterThan(0);
-      expect(highlightLabels(locale).sort()).toEqual([...active].sort());
-    });
-
-    it(`${locale}: body test-pass date equals frontmatter lastModified`, () => {
-      const raw = readCodesPage(locale);
-      const lastModified = lastModifiedOf(frontmatterOf(raw));
-      expect(lastModified, 'codes frontmatter should pin lastModified').toBeTruthy();
-      const testPassDate = bodyTestPassDate(locale, bodyOf(raw));
-      if (!testPassDate) {
-        // Sentence absent → nothing to reconcile (refresh-audit's degraded
-        // fallback); but a marker that fails to parse is a defect.
-        const marker = locale === 'en' ? 'full test history for this pass' : '今回の検証日';
-        expect(raw.includes(marker), `test-pass marker present but unparseable in ${locale}`).toBe(false);
-        return;
+  it('no article declares the removed category', () => {
+    const offenders: string[] = [];
+    for (const locale of localeDirs()) {
+      for (const file of walk(join(CONTENT_DIR, locale))) {
+        const fm = frontmatterOf(readFileSync(file, 'utf8'));
+        if (new RegExp(`^category:\\s*['"]?${REMOVED_TYPE}['"]?\\s*$`, 'm').test(fm)) {
+          offenders.push(file.slice(ROOT.length + 1));
+        }
       }
-      expect(testPassDate).toBe(lastModified);
-    });
-  }
+    }
+    expect(
+      offenders,
+      `these articles declare category: ${REMOVED_TYPE}, which is no longer a content type — the build accepts it but the list route soft-404s`,
+    ).toEqual([]);
+  });
+
+  it(`the nav/config layer agrees: CONTENT_TYPES carries no "${REMOVED_TYPE}" key`, () => {
+    // Constraint #4 of the repo: navigation.ts keys, en.json nav keys and the
+    // content directories must match in all three places. This pins the third
+    // half for the removed type (the directories and the nav keys are the two
+    // tests above and below the config check).
+    expect(CONTENT_TYPES, `CONTENT_TYPES still advertises ${REMOVED_TYPE}`).not.toContain(REMOVED_TYPE);
+    expect(
+      NAVIGATION_CONFIG.map((n) => n.key),
+      `NAVIGATION_CONFIG still advertises ${REMOVED_TYPE}`,
+    ).not.toContain(REMOVED_TYPE);
+  });
+
+  it('the surviving hand-written surface (home badge-list) links to no codes route', () => {
+    const localeFiles = readdirSync(join(ROOT, 'src/locales')).filter((f) => f.endsWith('.json'));
+    expect(localeFiles.length, 'src/locales must still ship locale JSON').toBeGreaterThan(1);
+    const offenders: string[] = [];
+    for (const file of localeFiles) {
+      for (const href of badgeListHrefs(file)) {
+        if (new RegExp(`(^|/)${REMOVED_TYPE}(/|$)`).test(href)) offenders.push(`${file} → ${href}`);
+      }
+    }
+    expect(
+      offenders,
+      'home explore still points at the removed /codes route — a hand-written href that silently 404s for every locale',
+    ).toEqual([]);
+  });
 });

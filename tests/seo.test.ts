@@ -133,8 +133,15 @@ describe('SEO helpers', () => {
     });
 
     it('skips the suffix when the title already carries the game name', () => {
-      const t = pageTitle('Anvil Quest Boss Guide');
-      expect(t).toBe('Anvil Quest Boss Guide');
+      // Fork note: the demo game identity ("Anvil Quest") was rebranded away,
+      // so this must derive the name from site config — hardcoding the old
+      // name asserted a game the site no longer is. The contract (skip when
+      // the title already carries site.game.name) is unchanged.
+      const carries = `${site.game.name} Boss Guide`;
+      const t = pageTitle(carries);
+      expect(t).toBe(carries);
+      // And it really did skip — without the skip it would have grown a suffix.
+      expect(t.endsWith(`— ${site.name}`)).toBe(false);
     });
 
     it('switches to the short suffix for long titles (>50 chars)', () => {

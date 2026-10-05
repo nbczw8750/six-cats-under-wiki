@@ -1,176 +1,109 @@
 /**
- * Contract tests for the community digest data file
- * (src/components/landing/community-digest.json — appended daily by the
- * automation pipeline, spec:
- * docs/superpowers/specs/2026-09-08-community-digest-pipeline.md).
+ * Community digest pipeline contract — REMOVED in this fork.
  *
- * CommunityHighlights.astro casts the JSON and deep-reads fields
- * (`r.stats.messages`, `r.quotes.length`, …), so a malformed daily append
- * would only surface as a build crash at render time. These tests pin the
- * spec's mechanical invariants (§4 schema / §5 self-check / §3.5 privacy
- * split) so a bad automation PR goes red in CI before human review.
+ * Upstream, src/components/landing/community-digest.json is appended daily by
+ * the automation pipeline (spec:
+ * docs/superpowers/specs/2026-09-08-community-digest-pipeline.md) and read by
+ * CommunityHighlights.astro, whose deep reads (`r.stats.messages`,
+ * `r.quotes.length`, …) only fail at render time if a bad append ships. The
+ * original suite pinned that file's schema / ordering / privacy invariants.
  *
- * Deliberately NOT pinned here: content-level red lines (fabricated facts,
- * the specific-course review ban). Those are not mechanically checkable
- * without false positives on future legitimate content and stay with the
- * spec checklist + human review at PR merge.
+ * This fork deleted the whole feature as a unit: no src/components/landing/,
+ * no community-digest.json, no page to render it, and no workflow or script
+ * left that writes or reads it. Reading the JSON at import time therefore
+ * fails the whole file before a single assertion runs.
+ *
+ * What stays pinned is the same feature's contract from the other side — both
+ * halves must be gone together, plus the privacy red line (spec §5 step 5 /
+ * §6.2) extended over the data surfaces this fork DOES still publish. A
+ * half-restored pipeline (producer without consumer, or consumer without data)
+ * goes red here instead of shipping a crash or a dead scheduled workflow.
  */
-import { readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, test } from 'vitest';
-import digest from '~/components/landing/community-digest.json';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-type Raw = Record<string, unknown>;
-
-const data = digest as unknown as {
-  schemaVersion: number;
-  updated: string;
-  since: string;
-  categories: { id: string; items: Raw[] }[];
-  daily: { date: string; summary: string; topics: string[] }[];
-  reports?: Raw[];
-};
-
-const FULL_DATE = /^\d{4}-\d{2}-\d{2}$/;
-const SHORT_DATE = /^\d{2}-\d{2}$/;
-
-const CATEGORY_IDS = ['gold', 'pitfalls', 'qa', 'feedback', 'news'];
-// Public subset of the 12-dim daily report (spec §3.5). The component
-// deep-reads every one of these; exact-key-set also proves the owner-only
-// dimensions never leaked in.
-const PUBLIC_REPORT_KEYS = [
-  'date',
-  'stats',
-  'quotes',
-  'takeaways',
-  'qa',
-  'resources',
-  'faq',
-  'topics',
-].sort();
+const DIGEST_FILE = join(root, 'src/components/landing/community-digest.json');
+const LANDING_DIR = join(root, 'src/components/landing');
 
 // Privacy red line (spec §5 step 5 / §6.2): member identity beyond group
-// nicknames must never reach the public file.
+// nicknames must never reach a public file. The digest itself is gone, so the
+// same patterns now guard every data surface the site actually publishes.
 const PRIVACY_PATTERNS: [string, RegExp][] = [
   ['wxid', /wxid_\w+/i],
   ['official-account id', /gh_[A-Za-z0-9_]{4,}/],
   ['11-digit phone number', /(?<!\d)1[3-9]\d{9}(?!\d)/],
 ];
 
-const reports = data.reports ?? [];
-const dailyDates = data.daily.map((d) => d.date);
+/** Repo-relative files of the kinds that could wire the pipeline up. */
+function pipelineCandidates(): string[] {
+  const out: string[] = [];
+  const walk = (dir: string) => {
+    if (!existsSync(dir)) return;
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, e.name);
+      if (e.isDirectory()) walk(full);
+      else if (/\.(ya?ml|mjs|cjs|ts|tsx|astro|json)$/.test(e.name)) out.push(full);
+    }
+  };
+  walk(join(root, '.github/workflows'));
+  walk(join(root, 'scripts'));
+  walk(join(root, 'src'));
+  return out;
+}
 
-describe('community-digest.json contract (written daily by automation)', () => {
-  test('top-level envelope is well-formed', () => {
-    expect(data.schemaVersion).toBeGreaterThanOrEqual(2);
-    expect(data.updated).toMatch(FULL_DATE);
-    expect(data.since).toMatch(FULL_DATE);
+/** Every file this fork still publishes as public data. */
+function publicDataFiles(): string[] {
+  const out: string[] = [];
+  const walk = (dir: string) => {
+    if (!existsSync(dir)) return;
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, e.name);
+      if (e.isDirectory()) walk(full);
+      else if (/\.(json|md|mdx|txt|html|xml|webmanifest)$/.test(e.name)) out.push(full);
+    }
+  };
+  walk(join(root, 'public'));
+  walk(join(root, 'src/locales'));
+  walk(join(root, 'src/content'));
+  return out;
+}
+
+describe('community digest pipeline (removed in this fork)', () => {
+  test('the data file and its component directory are both gone', () => {
+    expect(existsSync(DIGEST_FILE), 'community-digest.json must stay removed').toBe(false);
+    expect(existsSync(LANDING_DIR), 'src/components/landing must stay removed').toBe(false);
   });
 
-  test('categories: the fixed five ids in order, every item shaped for the component', () => {
-    expect(data.categories.map((c) => c.id)).toEqual(CATEGORY_IDS);
-    for (const cat of data.categories) {
-      expect(cat.items.length, `category ${cat.id} is empty`).toBeGreaterThan(0);
-      for (const item of cat.items) {
-        expect(item.date, `${cat.id} item date`).toMatch(SHORT_DATE);
-        if (cat.id === 'qa') {
-          expect(typeof item.q, 'qa q').toBe('string');
-          expect(item.q).toBeTruthy();
-          expect(typeof item.a, 'qa a').toBe('string');
-          expect(item.a).toBeTruthy();
-        } else {
-          expect(typeof item.title, `${cat.id} title`).toBe('string');
-          expect(item.title).toBeTruthy();
-          expect(typeof item.detail, `${cat.id} detail`).toBe('string');
-          expect(item.detail).toBeTruthy();
-          if (cat.id === 'feedback') {
-            // New items are always "open"; the maintainer flips resolved ones
-            // to "resolved" after shipping the fix (spec §3/§4).
-            expect(['open', 'resolved'], 'feedback status').toContain(item.status);
-          }
-        }
-        if (item.tags !== undefined) {
-          expect(Array.isArray(item.tags), 'tags is an array').toBe(true);
-        }
+  test('no producer or consumer is left behind (workflows, scripts, site sources)', () => {
+    // A scheduled job still writing this file would open a PR nobody reads;
+    // a component still importing it would crash the build. Both are silent
+    // from the file's own absence, so they get their own scan.
+    const offenders: string[] = [];
+    for (const file of pipelineCandidates()) {
+      const raw = readFileSync(file, 'utf8');
+      if (/community-digest|CommunityHighlights/.test(raw)) {
+        offenders.push(file.slice(root.length + 1));
       }
     }
+    expect(offenders, 'these still reference the removed digest pipeline').toEqual([]);
   });
 
-  test('daily: strict YYYY-MM-DD descending, no duplicates, reaches back to since', () => {
-    expect(dailyDates.length).toBeGreaterThan(0);
-    for (let i = 1; i < dailyDates.length; i++) {
-      expect(dailyDates[i] < dailyDates[i - 1], `${dailyDates[i]} after ${dailyDates[i - 1]}`).toBe(
-        true,
-      );
-    }
-    expect(dailyDates[dailyDates.length - 1]).toBe(data.since);
-  });
-
-  test('every curated item date has a daily line (spec §4 invariant 1)', () => {
-    const suffixes = new Set(dailyDates.map((d) => d.slice(5)));
-    for (const cat of data.categories) {
-      for (const item of cat.items) {
-        expect(suffixes.has(String(item.date)), `${cat.id} ${String(item.date)} in daily`).toBe(
-          true,
-        );
+  test('privacy scan: no wxid / official-account id / phone number in any published data file', () => {
+    // Inherited from the original suite (spec §5 step 5): the pattern list is
+    // unchanged, only the surface widened from one JSON to everything public.
+    const files = publicDataFiles();
+    expect(files.length, 'the site must still publish data files').toBeGreaterThan(0);
+    const hits: string[] = [];
+    for (const file of files) {
+      const raw = readFileSync(file, 'utf8');
+      for (const [name, pattern] of PRIVACY_PATTERNS) {
+        if (pattern.test(raw)) hits.push(`${name}: ${file.slice(root.length + 1)}`);
       }
     }
-  });
-
-  test('reports: exact public shape the component deep-reads, newest-first, no duplicates', () => {
-    expect(reports.length).toBeGreaterThan(0);
-    const dates: string[] = [];
-    for (const r of reports) {
-      expect(Object.keys(r).sort(), 'report keys').toEqual(PUBLIC_REPORT_KEYS);
-      expect(r.date).toMatch(FULL_DATE);
-      const stats = r.stats as Raw;
-      expect(typeof stats.messages).toBe('number');
-      expect(typeof stats.speakers).toBe('number');
-      expect(typeof stats.peakHour).toBe('string');
-      expect(typeof stats.heat).toBe('string');
-      for (const key of ['quotes', 'takeaways', 'qa', 'resources', 'faq', 'topics']) {
-        expect(Array.isArray(r[key]), `report ${key} is an array`).toBe(true);
-      }
-      dates.push(String(r.date));
-    }
-    for (let i = 1; i < dates.length; i++) {
-      expect(dates[i] < dates[i - 1], `${dates[i]} after ${dates[i - 1]}`).toBe(true);
-    }
-  });
-
-  test('report dates pair with curated days; newest report matches newest daily line', () => {
-    const dailySet = new Set(dailyDates);
-    for (const r of reports) {
-      expect(dailySet.has(String(r.date)), `report ${String(r.date)} not in daily`).toBe(true);
-    }
-    expect(reports[0].date).toBe(data.daily[0].date);
-  });
-
-  test('owner-only dimensions never leak into the public file (spec §3.5)', () => {
-    const leaked = reports
-      .flatMap((r) => Object.keys(r))
-      .filter((k) =>
-        ['unresolved', 'feedbackItems', 'activeMembers', 'newcomers', 'sentiment'].includes(k),
-      );
-    expect(leaked).toEqual([]);
-  });
-
-  test('privacy scan: no wxid / official-account id / phone number anywhere', () => {
-    const raw = JSON.stringify(data);
-    for (const [name, pattern] of PRIVACY_PATTERNS) {
-      expect(raw, name).not.toMatch(pattern);
-    }
-  });
-
-  test('file ends with exactly one trailing newline (daily-append ping-pong guard)', () => {
-    // The 23:00 automation rewrites this file daily; it has twice stripped
-    // the trailing newline, churning every later diff and tangling stacked
-    // PRs. Pinned so a bare rewrite goes red in CI instead of ping-ponging.
-    const raw = readFileSync(join(root, 'src/components/landing/community-digest.json'), 'utf8');
-    expect(raw.endsWith('\n'), 'missing trailing newline').toBe(true);
-    expect(raw.endsWith('\n\n'), 'more than one trailing newline').toBe(false);
+    expect(hits).toEqual([]);
   });
 });

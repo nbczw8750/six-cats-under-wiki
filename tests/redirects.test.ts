@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, test } from 'vitest';
 
@@ -17,6 +17,14 @@ import { describe, expect, test } from 'vitest';
  *   - fork initialization removes the file on BOTH channels (CLI
  *     LANDING_PATHS + setup.yml landing step) — the file only serves
  *     /landing/docs URLs, which forks do not have.
+ *
+ * FORK NOTE: this site deleted the /landing/docs route tree outright (no
+ * src/pages/landing*, /landing/ 404s in production), and `public/_redirects`
+ * went with it — which the contract above explicitly calls the correct fork
+ * state. `parseRedirects()` therefore returns [] when the file is absent, and
+ * the suite leads with a strict absence anchor (file gone AND routes gone,
+ * cross-checked) so the remaining rule-set tests can never be green by
+ * accident; they re-activate untouched the moment the file is restored.
  */
 const repoRoot = fileURLToPath(new URL('..', import.meta.url));
 
@@ -36,7 +44,13 @@ const LOCALE_PREFIXES = ['', '/zh'] as const;
 
 type Rule = { source: string; target: string; status: string };
 
+function redirectsExists(): boolean {
+  return existsSync(`${repoRoot}public/_redirects`);
+}
+
 function parseRedirects(): Rule[] {
+  // Fork state: the file ships removed (see docblock) — no rules to parse.
+  if (!redirectsExists()) return [];
   const raw = readFileSync(`${repoRoot}public/_redirects`, 'utf8');
   const rules: Rule[] = [];
   for (const line of raw.split('\n')) {
@@ -70,18 +84,37 @@ function slugOf(pathname: string): string {
 describe('public/_redirects (renamed handbook lesson slugs)', () => {
   const rules = parseRedirects();
 
-  test('covers exactly the removed slugs × both locales × both slash forms — nothing more', () => {
-    const expected = new Set(
-      LOCALE_PREFIXES.flatMap((prefix) =>
-        REMOVED_SLUGS.flatMap(([from]) => [
-          `${prefix}/landing/docs/${from}/`,
-          `${prefix}/landing/docs/${from}`,
-        ]),
-      ),
+  test('public/_redirects stays absent — and so do the /landing/docs routes it served', () => {
+    // The file only ever 301'd handbook slugs under /landing/docs/. This fork
+    // deleted that route tree, so a surviving _redirects is pure liability:
+    // Cloudflare applies it before static assets, so a stale rule can shadow
+    // a live page or redirect into a 404. Both halves are pinned (file gone,
+    // routes gone) — a half-finished re-merge that restores one without the
+    // other goes red here.
+    const routes = readdirSync(`${repoRoot}src/pages`, { recursive: true }).filter((f) =>
+      /(^|[\\/])landing([\\/]|\.astro$)/.test(String(f)),
     );
-    const sources = rules.map((r) => r.source);
-    expect(new Set(sources).size, 'duplicate source paths').toBe(sources.length);
-    expect(new Set(sources)).toEqual(expected);
+    expect(routes, 'a /landing route exists while public/_redirects is removed').toEqual([]);
+    expect(redirectsExists(), 'public/_redirects must stay removed').toBe(false);
+    expect(parseRedirects()).toEqual([]);
+  });
+
+  test('the redesign mapping table still names truly-gone sources and live successors, ×2 locales', () => {
+    // Same invariants as the old rule-set checks (source really gone so a 301
+    // can never shadow a live lesson; target really present so no rule lands
+    // on a 404; both locales covered), asserted against the table itself now
+    // that the generated file is gone.
+    for (const prefix of LOCALE_PREFIXES) {
+      const locale = prefix === '/zh' ? 'zh' : 'en';
+      const slugs = handbookSlugs(locale);
+      for (const [from, to] of REMOVED_SLUGS) {
+        expect(
+          slugs.has(from),
+          `docs/handbook/${locale}/${from}.md is back — a 301 from it would hide a live lesson`,
+        ).toBe(false);
+        expect(slugs.has(to), `docs/handbook/${locale}/${to}.md missing — a redirect would 404`).toBe(true);
+      }
+    }
   });
 
   test('en and /zh map the same slugs to the same lessons', () => {
