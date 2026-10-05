@@ -172,7 +172,8 @@
       "title": "Six Cats Under Wiki",
       "description": "Six Cats Under 全部攻略:流程、解谜提示与常见问题,教你唤醒每一只猫、打开前门。",
       "ctaPrimary": "立即游玩",
-      "ctaSecondary": "浏览攻略"
+      "ctaSecondary": "浏览攻略",
+      "videoId": ""
     },
     "start": {
       "badge": "快速开始",

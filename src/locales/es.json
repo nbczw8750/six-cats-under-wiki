@@ -172,7 +172,8 @@
       "title": "Six Cats Under Wiki",
       "description": "Soluciones, pistas de rompecabezas y FAQ de Six Cats Under: así despertarás a Frederick y resolverás cada acertijo de este juego de fantasmas de itch.io.",
       "ctaPrimary": "Jugar ahora",
-      "ctaSecondary": "Ver guías"
+      "ctaSecondary": "Ver guías",
+      "videoId": ""
     },
     "start": {
       "badge": "Inicio rápido",
