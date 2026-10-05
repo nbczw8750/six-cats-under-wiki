@@ -180,7 +180,12 @@ describe('resolveEffectiveRoot', () => {
 
 describe('sitesRegistryPath', () => {
   it('honors XDG_CONFIG_HOME when absolute', () => {
-    expect(sitesRegistryPath({ XDG_CONFIG_HOME: '/xdg' })).toBe('/xdg/anvil-ops/sites.toml');
+    // join() rather than a hardcoded POSIX literal — the sibling test below
+    // already spells its expectation this way; sitesRegistryPath delegates to
+    // node:path, so a literal '/' path only passes on POSIX.
+    expect(sitesRegistryPath({ XDG_CONFIG_HOME: '/xdg' })).toBe(
+      join('/xdg', 'anvil-ops', 'sites.toml'),
+    );
   });
 
   it('ignores relative XDG_CONFIG_HOME and falls back to ~/.config', () => {

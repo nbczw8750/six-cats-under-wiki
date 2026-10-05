@@ -278,10 +278,23 @@ async function runSubmit(
   if (toplevel.status === 0 && toplevel.stdout.trim()) {
     const gitRoot = toplevel.stdout.trim();
     const norm = (p: string): string => {
+      // realpathSync.native FIRST: on Windows it canonicalizes 8.3 short
+      // names (C:\Users\ADMINI~1\... → C:\Users\Administrator\...) and
+      // normalizes separators into the same long form git always reports.
+      // Plain JS realpathSync keeps the alias, so a submit from an aliased
+      // %TEMP%/profile path refused against its OWN repo: "git root
+      // C:/Users/Administrator/... is not the site root
+      // C:\Users\ADMINI~1\...". POSIX behavior is unchanged (native ≡ plain
+      // there). Fallback chain still ends at resolve() for paths that do not
+      // exist (the monorepo-guard reverse test relies on that).
       try {
-        return realpathSync(p);
+        return realpathSync.native(p);
       } catch {
-        return resolve(p);
+        try {
+          return realpathSync(p);
+        } catch {
+          return resolve(p);
+        }
       }
     };
     if (norm(gitRoot) !== norm(site.root)) {

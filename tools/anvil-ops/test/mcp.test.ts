@@ -142,7 +142,12 @@ describe('MCP site resolution (multi-site registry)', () => {
     const registryPath = join(base, 'sites.toml');
     writeFileSync(
       registryPath,
-      `defaultSite = "main-wiki"\n\n[[sites]]\nname = "main-wiki"\npath = "${siteDir}"\n`,
+      // JSON.stringify = valid TOML basic-string escaping (\\ and \"). A raw
+      // interpolation only works for POSIX paths; on Windows siteDir is
+      // `C:\Users\...` and the bare backslashes parse as TOML string escapes
+      // the file never contained (Invalid escape sequence), so the registry
+      // fails to load before any assertion runs.
+      `defaultSite = "main-wiki"\n\n[[sites]]\nname = "main-wiki"\npath = ${JSON.stringify(siteDir)}\n`,
     );
     return { registryPath, siteDir, emptyDir };
   }
